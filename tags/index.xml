@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on landscape</title>
-    <link>http://jlandowner.github.io/tags/</link>
+    <link>https://jlandowner.github.io/tags/</link>
     <description>Recent content in Tags on jlandowner.github.io</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
     <lastBuildDate>Tue, 19 May 2020 14:08:57 +0900</lastBuildDate>
     
-    <atom:link href="http://jlandowner.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://jlandowner.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>daily</title>
-      <link>http://jlandowner.github.io/tags/daily/</link>
+      <link>https://jlandowner.github.io/tags/daily/</link>
       <pubDate>Tue, 19 May 2020 14:08:57 +0900</pubDate>
       
-      <guid>http://jlandowner.github.io/tags/daily/</guid>
+      <guid>https://jlandowner.github.io/tags/daily/</guid>
       <description>
       
       
