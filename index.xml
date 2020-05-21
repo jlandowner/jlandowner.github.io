@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>landscape</title>
+    <link>http://jlandowner.com/</link>
+    <description>Recent content on jlandowner.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
+    <lastBuildDate>Tue, 19 May 2020 14:08:57 +0900</lastBuildDate>
+    
+    <atom:link href="http://jlandowner.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Hello World</title>
+      <link>http://jlandowner.com/posts/first-article/</link>
+      <pubDate>Tue, 19 May 2020 14:08:57 +0900</pubDate>
+      
+      <guid>http://jlandowner.com/posts/first-article/</guid>
+      <description>
+      
+      Hello, world.
+Starting a new personal site.
+I would like to post about my works and daily thoughts.
+
+      
+      </description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>http://jlandowner.com/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://jlandowner.com/about/</guid>
+      <description>
+      
+      A developer walking arround Cloud Architecture, Middlewares, Developer Experiences.
+Now working on a Kubernetes-based pl...
+      
+      </description>
+    </item>
+    
+  </channel>
+</rss>
