@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Tags on landscape</title>
-    <link>https://blog.jlandowner.com/tags/</link>
-    <description>Recent content in Tags on blog.jlandowner.com</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
-    <lastBuildDate>Tue, 19 May 2020 14:08:57 +0900</lastBuildDate>
-    
-    <atom:link href="https://blog.jlandowner.com/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>daily</title>
-      <link>https://blog.jlandowner.com/tags/daily/</link>
-      <pubDate>Tue, 19 May 2020 14:08:57 +0900</pubDate>
-      
-      <guid>https://blog.jlandowner.com/tags/daily/</guid>
-      <description>
-      
-      
-      
-      </description>
-    </item>
-    
-  </channel>
+	<channel>
+		<title>Tags on landscape</title>
+		<link>https://blog.jlandowner.com/tags/</link>
+		<description>Recent content in Tags on blog.jlandowner.com</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
+		<lastBuildDate>Tue, 19 May 2020 14:08:57 +0900</lastBuildDate>
+		
+		<atom:link href="https://blog.jlandowner.com/tags/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>daily</title>
+			<link>https://blog.jlandowner.com/tags/daily/</link>
+			<pubDate>Tue, 19 May 2020 14:08:57 +0900</pubDate>
+			
+			<guid>https://blog.jlandowner.com/tags/daily/</guid>
+			<description>
+				
+				
+				
+			</description>
+		</item>
+		
+	</channel>
 </rss>

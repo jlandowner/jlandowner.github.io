@@ -1,31 +1,55 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Posts on landscape</title>
-    <link>https://blog.jlandowner.com/posts/</link>
-    <description>Recent content in Posts on blog.jlandowner.com</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
-    <lastBuildDate>Tue, 19 May 2020 14:08:57 +0900</lastBuildDate>
-    
-    <atom:link href="https://blog.jlandowner.com/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Hello World</title>
-      <link>https://blog.jlandowner.com/posts/first-article/</link>
-      <pubDate>Tue, 19 May 2020 14:08:57 +0900</pubDate>
-      
-      <guid>https://blog.jlandowner.com/posts/first-article/</guid>
-      <description>
-      
-      Hello, world.
+	<channel>
+		<title>Posts on landscape</title>
+		<link>https://blog.jlandowner.com/posts/</link>
+		<description>Recent content in Posts on blog.jlandowner.com</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
+		<lastBuildDate>Tue, 04 Aug 2020 01:06:48 +0900</lastBuildDate>
+		
+		<atom:link href="https://blog.jlandowner.com/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Pod Security Policy Best Practice</title>
+			<link>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</link>
+			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
+			
+			<guid>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</guid>
+			<description>
+				
+				
+				
+			</description>
+		</item>
+		<item>
+			<title>Introducing Pod Disposal Operator</title>
+			<link>https://blog.jlandowner.com/posts/introducing-pod-disposal-operator/</link>
+			<pubDate>Sat, 27 Jun 2020 12:46:08 +0900</pubDate>
+			
+			<guid>https://blog.jlandowner.com/posts/introducing-pod-disposal-operator/</guid>
+			<description>
+				
+				I have released my new work 🚀 called Pod Disposal Operator, a Kubernetes Operator for automatic pod relocating and contr...
+				
+			</description>
+		</item>
+		<item>
+			<title>Hello World</title>
+			<link>https://blog.jlandowner.com/posts/first-article/</link>
+			<pubDate>Tue, 19 May 2020 14:08:57 +0900</pubDate>
+			
+			<guid>https://blog.jlandowner.com/posts/first-article/</guid>
+			<description>
+				
+				Hello, world.
 Starting a new personal site.
 I would like to post about my works and daily thoughts.
 
-      
-      </description>
-    </item>
-    
-  </channel>
+				
+			</description>
+		</item>
+		
+	</channel>
 </rss>
