@@ -7,10 +7,22 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
-		<lastBuildDate>Sat, 27 Jun 2020 12:46:08 +0900</lastBuildDate>
+		<lastBuildDate>Tue, 04 Aug 2020 01:06:48 +0900</lastBuildDate>
 		
 		<atom:link href="https://blog.jlandowner.com/index.xml" rel="self" type="application/rss+xml" />
 		
+		<item>
+			<title>Pod Security Policy Best Practice for multi-tenant cluster</title>
+			<link>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</link>
+			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
+			
+			<guid>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</guid>
+			<description>
+				
+				Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes clus...
+				
+			</description>
+		</item>
 		<item>
 			<title>Introducing Pod Disposal Operator</title>
 			<link>https://blog.jlandowner.com/posts/introducing-pod-disposal-operator/</link>
