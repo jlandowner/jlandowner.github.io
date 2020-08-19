@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Posts on landscape</title>
-		<link>https://blog.jlandowner.com/posts/</link>
-		<description>Recent content in Posts on blog.jlandowner.com</description>
+		<title>Kubernetes on landscape</title>
+		<link>https://blog.jlandowner.com/tags/kubernetes/</link>
+		<description>Recent content in Kubernetes on blog.jlandowner.com</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
 		<lastBuildDate>Sun, 16 Aug 2020 14:34:48 +0900</lastBuildDate>
 		
-		<atom:link href="https://blog.jlandowner.com/posts/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="https://blog.jlandowner.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
 			<title>Deepdive into Kubernetes Probe&#39;s period seconds</title>
@@ -44,21 +44,6 @@
 			<description>
 				
 				I have released my new work 🚀 called Pod Disposal Operator, a Kubernetes Operator for automatic pod relocating and contr...
-				
-			</description>
-		</item>
-		<item>
-			<title>Hello World</title>
-			<link>https://blog.jlandowner.com/posts/first-article/</link>
-			<pubDate>Tue, 19 May 2020 14:08:57 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/posts/first-article/</guid>
-			<description>
-				
-				Hello, world.
-Starting a new personal site.
-I would like to post about my works and daily thoughts.
-
 				
 			</description>
 		</item>

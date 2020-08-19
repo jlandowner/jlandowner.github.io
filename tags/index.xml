@@ -7,16 +7,16 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
-		<lastBuildDate>Tue, 04 Aug 2020 01:06:48 +0900</lastBuildDate>
+		<lastBuildDate>Sun, 16 Aug 2020 14:34:48 +0900</lastBuildDate>
 		
 		<atom:link href="https://blog.jlandowner.com/tags/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
-			<title>Krew</title>
-			<link>https://blog.jlandowner.com/tags/krew/</link>
-			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
+			<title>CodeReading</title>
+			<link>https://blog.jlandowner.com/tags/codereading/</link>
+			<pubDate>Sun, 16 Aug 2020 14:34:48 +0900</pubDate>
 			
-			<guid>https://blog.jlandowner.com/tags/krew/</guid>
+			<guid>https://blog.jlandowner.com/tags/codereading/</guid>
 			<description>
 				
 				
@@ -26,9 +26,21 @@
 		<item>
 			<title>Kubernetes</title>
 			<link>https://blog.jlandowner.com/tags/kubernetes/</link>
-			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
+			<pubDate>Sun, 16 Aug 2020 14:34:48 +0900</pubDate>
 			
 			<guid>https://blog.jlandowner.com/tags/kubernetes/</guid>
+			<description>
+				
+				
+				
+			</description>
+		</item>
+		<item>
+			<title>Krew</title>
+			<link>https://blog.jlandowner.com/tags/krew/</link>
+			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
+			
+			<guid>https://blog.jlandowner.com/tags/krew/</guid>
 			<description>
 				
 				

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <link rel="apple-touch-icon" sizes="57x57" href="https://blog.jlandowner.com/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="https://blog.jlandowner.com/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="https://blog.jlandowner.com/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://blog.jlandowner.com/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="https://blog.jlandowner.com/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="https://blog.jlandowner.com/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="https://blog.jlandowner.com/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://blog.jlandowner.com/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://blog.jlandowner.com/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="https://blog.jlandowner.com/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://blog.jlandowner.com/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="https://blog.jlandowner.com/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://blog.jlandowner.com/favicon/favicon-16x16.png">
+  <link rel="manifest" href="https://blog.jlandowner.com/favicon/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="https://blog.jlandowner.com/favicon/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170607476-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-170607476-1');
+  </script>
+
+
+  <meta name="generator" content="Hugo 0.72.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="keywords" content="Kubernetes,CodeReading"><meta property="og:title" content="Deepdive into Kubernetes Probe&#39;s period seconds" />
+<meta property="og:description" content="Kubernetes has a container&rsquo;s health check mechanism called Probe. This might be a common feature for almost Kubernetes users.
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+Now at v1.18, there are three types of probes ➡️ Liveness Probe, Readiness Probe and Startup Probe.
+Though these three types of probes are different only in their behavior when a health check fails, the basic mechanism of the health check itself is not so different.
+Also Probes has three types of health checks ➡️ command execution, TCP or HTTP request." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jlandowner.com/posts/deepdive-into-kubernetes-probes-period-seconds/" />
+<meta property="article:published_time" content="2020-08-16T14:34:48+09:00" />
+<meta property="article:modified_time" content="2020-08-16T14:34:48+09:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Deepdive into Kubernetes Probe&#39;s period seconds"/>
+<meta name="twitter:description" content="Kubernetes has a container&rsquo;s health check mechanism called Probe. This might be a common feature for almost Kubernetes users.
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+Now at v1.18, there are three types of probes ➡️ Liveness Probe, Readiness Probe and Startup Probe.
+Though these three types of probes are different only in their behavior when a health check fails, the basic mechanism of the health check itself is not so different.
+Also Probes has three types of health checks ➡️ command execution, TCP or HTTP request."/>
+
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.com/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.com/css/main.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.com/css/all.css" />
+<title>Deepdive into Kubernetes Probe&#39;s period seconds | landscape</title></head>
+<body><header>
+	
+	<div id="avatar">
+		<a href="https://blog.jlandowner.com/">
+			<img src="/img/avator.png" alt="landscape">
+		</a>
+	</div>
+	
+	<div id="titletext"><h2 id="title"><a href="https://blog.jlandowner.com/">landscape</a></h2></div>
+	<div id="title-description"><p id="subtitle">Deep think, Easy go.</p><div id=social>
+			<nav>
+				<ul><li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li><li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li><li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li><li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li></ul>
+			</nav>
+		</div>
+	</div>
+	
+	<div id="mainmenu">
+		<nav>
+			<ul>
+				
+				<li><a href="/">Home</a></li>
+				
+				<li><a href="/posts">All Posts</a></li>
+				
+				<li><a href="/about">About</a></li>
+				
+				<li><a href="/tags">Tags</a></li>
+				
+			</ul>
+		</nav>
+	</div>
+	
+</header>
+<main><div class="post">
+	
+	<div class="author">
+	
+	</div>
+	<div class="post-header">
+	
+		<div class="meta">
+			
+			<div class="date">
+				<span class="day">16</span>
+				<span class="rest">Aug 2020</span>
+			</div>
+			
+		</div>
+		
+		<div class="matter">
+			<h1 class="title">Deepdive into Kubernetes Probe&#39;s period seconds</h1>
+		</div>
+	</div>
+	<div class="markdown">
+		<p>Kubernetes has a container&rsquo;s health check mechanism called <code>Probe</code>.
+This might be a common feature for almost Kubernetes users.</p>
+<p><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/</a></p>
+<p>Now at v1.18, there are three types of probes ➡️ <code>Liveness Probe</code>, <code>Readiness Probe</code> and <code>Startup Probe</code>.</p>
+<p>Though these three types of probes are different only in their behavior when a health check fails, the basic mechanism of the health check itself is not so different.</p>
+<p>Also <code>Probes</code> has three types of health checks ➡️ command execution, TCP or HTTP request.</p>
+<p>This kind of health check mechanism is a popular idea not only in Kubernetes but also in other products.
+However, the detail behaviors are different depending on each products.</p>
+<h3 id="probing-loop-period-seconds">Probing loop period seconds</h3>
+<p>Let&rsquo;s take the following example 👀 In order to probe your application is ready to accept requests, you might sometimes need to check not only your application but also the databases or external services it depends on.
+In such a case, the health check may take longer than expected due to network latency or external service congestion.</p>
+<p>Suppose that Kubernetes Readiness Probe is enabled with <code>PeriodSeconds</code> set to 3 seconds, and a single probe of HTTP request takes 2 seconds.</p>
+<p>In this case, will the next Probe request begin 3 seconds after the previous request is responded❓
+Or will it be performed 3 seconds after the last request, regardless of the previous response time❓ (meaning 1 second later after the previous request is responded)</p>
+<p>Furthermore, if the Probe request takes more than 3 seconds, will the next request start in parallel to the previous request❓</p>
+<p>The Kubernetes official documentation does not describe this behavior in detail (I worked on the official website translatation into Japanese)</p>
+<h3 id="deepdive-into-kubelet-code">Deepdive into kubelet code</h3>
+<p><code>Probes</code> is performed by the Kubelet on the node where the container is running. The Kubelet <code>Prober</code> package contains the code about it.</p>
+<p><a href="https://github.com/kubernetes/kubernetes/tree/master/pkg/kubelet/prober">https://github.com/kubernetes/kubernetes/tree/master/pkg/kubelet/prober</a></p>
+<p>You can see three major components here: <code>prober.go</code>, <code>prober_manager.go</code>, and <code>worker.go</code>.
+It is helpful to understand only by its comments.</p>
+<ul>
+<li>
+<p>prober</p>
+<blockquote>
+<p>Prober helps to check the liveness/readiness/startup of a container.</p>
+</blockquote>
+</li>
+<li>
+<p>prober_manager</p>
+<blockquote>
+<p>Manager manages pod probing. It creates a probe &ldquo;worker&rdquo; for every container that specifies a probe (AddPod). The worker periodically probes its assigned container and caches the results.</p>
+</blockquote>
+</li>
+<li>
+<p>worker</p>
+<blockquote>
+<p>worker handles the periodic probing of its assigned container. Each worker has a go-routine associated with it which runs the probe loop until the container permanently terminates, or the stop channel is closed.</p>
+</blockquote>
+</li>
+</ul>
+<p>From the comments we can see that the worker has been running Probe in goroutine periodically.
+Let&rsquo;s see the worker&rsquo;s <code>run()</code> function.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// run periodically probes the container.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">w</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">worker</span>) <span style="color:#a6e22e">run</span>() {
+	<span style="color:#a6e22e">probeTickerPeriod</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>(<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">spec</span>.<span style="color:#a6e22e">PeriodSeconds</span>) <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>
+ 
+	<span style="color:#75715e">// If kubelet restarted the probes could be started in rapid succession.
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// Let the worker wait for a random portion of tickerPeriod before probing.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>(<span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Float64</span>() <span style="color:#f92672">*</span> float64(<span style="color:#a6e22e">probeTickerPeriod</span>)))
+ 
+	<span style="color:#a6e22e">probeTicker</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">NewTicker</span>(<span style="color:#a6e22e">probeTickerPeriod</span>)
+ 
+	<span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+		<span style="color:#75715e">// Clean up.
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">probeTicker</span>.<span style="color:#a6e22e">Stop</span>()
+		<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">containerID</span>.<span style="color:#a6e22e">IsEmpty</span>() {
+			<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">resultsManager</span>.<span style="color:#a6e22e">Remove</span>(<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">containerID</span>)
+		}
+ 
+		<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">probeManager</span>.<span style="color:#a6e22e">removeWorker</span>(<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">pod</span>.<span style="color:#a6e22e">UID</span>, <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">container</span>.<span style="color:#a6e22e">Name</span>, <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">probeType</span>)
+		<span style="color:#a6e22e">ProberResults</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">proberResultsSuccessfulMetricLabels</span>)
+		<span style="color:#a6e22e">ProberResults</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">proberResultsFailedMetricLabels</span>)
+		<span style="color:#a6e22e">ProberResults</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">proberResultsUnknownMetricLabels</span>)
+	}()
+ 
+<span style="color:#a6e22e">probeLoop</span>:
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">doProbe</span>() {
+		<span style="color:#75715e">// Wait for next probe tick.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">select</span> {
+		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">stopCh</span>:
+			<span style="color:#66d9ef">break</span> <span style="color:#a6e22e">probeLoop</span>
+		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">probeTicker</span>.<span style="color:#a6e22e">C</span>:
+			<span style="color:#75715e">// continue
+</span><span style="color:#75715e"></span>		}
+	}
+}
+ 
+</code></pre></div><p>At <code>probeLoop</code>, the sleep logic is implemented by <code>&lt;-probeTicker.C</code>.</p>
+<p>It is a channel of <code>time.Ticker</code> that blocks the Probes execution loop at regular intervals. Therefore <code>doProbe()</code> will be executed at the intervals.</p>
+<p><a href="https://golang.org/pkg/time/#Ticker">https://golang.org/pkg/time/#Ticker</a></p>
+<blockquote>
+<p>NewTicker returns a new Ticker containing a channel that will send the time with a period specified by the duration argument. It adjusts the intervals or drops ticks to make up for &gt;slow receivers.</p>
+</blockquote>
+<p>So how does the <code>time.Ticker</code> loop behave depending on the execution time of <code>doProbe()</code>❓</p>
+<p>Let&rsquo;s write a small code with the same logic and see how it behaves.
+It is a code that the execution time of <code>doProbe()</code> gradually increase by 1 seconds.</p>
+<p>PeriodSeconds is set to 3 seconds.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+ 
+<span style="color:#f92672">import</span> (
+	<span style="color:#e6db74">&#34;context&#34;</span>
+	<span style="color:#e6db74">&#34;log&#34;</span>
+	<span style="color:#e6db74">&#34;time&#34;</span>
+)
+ 
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">cancel</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">WithTimeout</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span><span style="color:#f92672">*</span><span style="color:#ae81ff">20</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">cancel</span>()
+ 
+	<span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">NewTicker</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">3000</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">Stop</span>()
+ 
+<span style="color:#a6e22e">probeLoop</span>:
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">doProbe</span>() {
+		<span style="color:#66d9ef">select</span> {
+		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">Done</span>():
+			<span style="color:#66d9ef">break</span> <span style="color:#a6e22e">probeLoop</span>
+		<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">C</span>:
+			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;ticker next&#34;</span>)
+		}
+	}
+	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;finished&#34;</span>)
+}
+ 
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#66d9ef">uint</span> = <span style="color:#ae81ff">0</span>
+ 
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">doProbe</span>() (<span style="color:#a6e22e">keepGoing</span> <span style="color:#66d9ef">bool</span>) {
+	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;doProbe start&#34;</span>, <span style="color:#a6e22e">i</span>)
+	<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>(<span style="color:#a6e22e">i</span>))
+	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;doProbe end&#34;</span>)
+	<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
+}
+</code></pre></div><p>The output is as follows.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ go run .
+2020/08/18 23:29:30 doProbe start <span style="color:#ae81ff">0</span>
+2020/08/18 23:29:30 doProbe end
+2020/08/18 23:29:33 ticker next     <span style="color:#75715e"># next after 3 seconds</span>
+2020/08/18 23:29:33 doProbe start <span style="color:#ae81ff">1</span>
+2020/08/18 23:29:34 doProbe end
+2020/08/18 23:29:36 ticker next     <span style="color:#75715e"># next after 2 seconds</span>
+2020/08/18 23:29:36 doProbe start <span style="color:#ae81ff">2</span>
+2020/08/18 23:29:38 doProbe end
+2020/08/18 23:29:39 ticker next     <span style="color:#75715e"># next after 1 seconds</span>
+2020/08/18 23:29:39 doProbe start <span style="color:#ae81ff">3</span>
+2020/08/18 23:29:42 doProbe end
+2020/08/18 23:29:42 ticker next     <span style="color:#75715e"># next after 0 seconds</span>
+2020/08/18 23:29:42 doProbe start <span style="color:#ae81ff">4</span>
+2020/08/18 23:29:46 doProbe end
+2020/08/18 23:29:46 ticker next     <span style="color:#75715e"># next after 0 seconds</span>
+2020/08/18 23:29:46 doProbe start <span style="color:#ae81ff">5</span>
+2020/08/18 23:29:51 doProbe end
+2020/08/18 23:29:51 finished
+</code></pre></div><p>When a Probe takes less than 3 seconds, it run every 3 seconds regardless of the Probe&rsquo;s execution time. For example, when a Probe takes 2 seconds, the next Probe start 1 seconds after the previous Probe ends.
+When a Probe takes longer than 3 seconds, the next Probe will start as soon as the Probe finishes.</p>
+<p>☑️Here is a summary of this page</p>
+<ul>
+<li>When a Probe takes less than period seconds, it run every period seconds regardless of the Probe&rsquo;s execution time.</li>
+<li>When a Probe takes longer than period seconds, the next Probe will start as soon as the Probe finishes.</li>
+</ul>
+<p>As you can see, the functionality of Kubernetes depends on that of Go.
+Even if you are not a Kubernetes developer or contributor, reading codes(or even only comments) will give you some good tips.</p>
+<p>Have a better k8s life 🙌</p>
+
+	</div>
+	
+	
+	
+	
+	
+		
+	
+	
+	
+	<div class="tags">
+		<div class="taxosfloating_left">
+			<p>Tags</p>
+		</div>
+		<div class="termsfloating_right">
+			<p>
+			
+			
+			
+			<a href="https://blog.jlandowner.com/tags/codereading/"> codereading </a>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<a href="https://blog.jlandowner.com/tags/kubernetes/"> kubernetes </a>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			</p>
+		</div>
+		<div class="clearit"></div>
+		
+		
+		
+		
+		
+	</div></div>
+
+  </main>
+<footer>
+	 © 2020 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae">Vitae</a> theme for <a href="https://gohugo.io">Hugo</a> 
+	
+	
+	
+</footer>
+
+
+</body>
+</html>
