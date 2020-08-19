@@ -120,9 +120,9 @@ However, the detail behaviors are different depending on each products.</p>
 <p>Let&rsquo;s take the following example 👀 In order to probe your application is ready to accept requests, you might sometimes need to check not only your application but also the databases or external services it depends on.
 In such a case, the health check may take longer than expected due to network latency or external service congestion.</p>
 <p>Suppose that Kubernetes Readiness Probe is enabled with <code>PeriodSeconds</code> set to 3 seconds, and a single probe of HTTP request takes 2 seconds.</p>
-<p>In this case, will the next Probe request begin 3 seconds after the previous request is responded❓
-Or will it be performed 3 seconds after the last request, regardless of the previous response time❓ (meaning 1 second later after the previous request is responded)</p>
-<p>Furthermore, if the Probe request takes more than 3 seconds, will the next request start in parallel to the previous request❓</p>
+<p>In this case, will the next Probe request begin 3 seconds after the previous request is responded?
+Or will it be performed 3 seconds after the last request, regardless of the previous response time? (meaning 1 second later after the previous request is responded)</p>
+<p>Furthermore, if the Probe request takes more than 3 seconds, will the next request start in parallel to the previous request?</p>
 <p>The Kubernetes official documentation does not describe this behavior in detail (I worked on the official website translatation into Japanese)</p>
 <h3 id="deepdive-into-kubelet-code">Deepdive into kubelet code</h3>
 <p><code>Probes</code> is performed by the Kubelet on the node where the container is running. The Kubelet <code>Prober</code> package contains the code about it.</p>
@@ -190,9 +190,9 @@ Let&rsquo;s see the worker&rsquo;s <code>run()</code> function.</p>
 <p>It is a channel of <code>time.Ticker</code> that blocks the Probes execution loop at regular intervals. Therefore <code>doProbe()</code> will be executed at the intervals.</p>
 <p><a href="https://golang.org/pkg/time/#Ticker">https://golang.org/pkg/time/#Ticker</a></p>
 <blockquote>
-<p>NewTicker returns a new Ticker containing a channel that will send the time with a period specified by the duration argument. It adjusts the intervals or drops ticks to make up for &gt;slow receivers.</p>
+<p>NewTicker returns a new Ticker containing a channel that will send the time with a period specified by the duration argument. It adjusts the intervals or drops ticks to make up for slow receivers.</p>
 </blockquote>
-<p>So how does the <code>time.Ticker</code> loop behave depending on the execution time of <code>doProbe()</code>❓</p>
+<p>So how does the <code>time.Ticker</code> loop behave depending on the execution time of <code>doProbe()</code>?</p>
 <p>Let&rsquo;s write a small code with the same logic and see how it behaves.
 It is a code that the execution time of <code>doProbe()</code> gradually increase by 1 seconds.</p>
 <p>PeriodSeconds is set to 3 seconds.</p>
