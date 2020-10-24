@@ -28,7 +28,7 @@
   </script>
 
 
-  <meta name="generator" content="Hugo 0.72.0" />
+  <meta name="generator" content="Hugo 0.75.1" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -164,27 +164,27 @@ Depending on the behavior/charactoristic of your application, you can rotate a l
 </code></pre></div><h3 id="configure-disposal">Configure disposal</h3>
 <p>You can cofigure a disposal schedule and strategy by a single Custom Resource Difinition <code>PodDisposalSchedule</code>.
 Sample configuration is as following.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: operator.k8s.jlandowner.com/v1
-<span style="color:#66d9ef">kind</span>: PodDisposalSchedule
-<span style="color:#66d9ef">metadata</span>:
-  <span style="color:#66d9ef">name</span>: poddisposalschedule-sample
-  <span style="color:#66d9ef">namespace</span>: default
-<span style="color:#66d9ef">spec</span>:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">operator.k8s.jlandowner.com/v1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PodDisposalSchedule</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">poddisposalschedule-sample</span>
+  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">default</span>
+<span style="color:#f92672">spec</span>:
   <span style="color:#75715e"># Target Pods selector</span>
-  <span style="color:#66d9ef">selector</span>:
+  <span style="color:#f92672">selector</span>:
     <span style="color:#75715e"># Only Deployment is available</span>
-    <span style="color:#66d9ef">type</span>: Deployment
+    <span style="color:#f92672">type</span>: <span style="color:#ae81ff">Deployment</span>
     <span style="color:#75715e"># Deployment name</span>
-    <span style="color:#66d9ef">name</span>: sample-nginx
+    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sample-nginx</span>
   <span style="color:#75715e"># Cron format&#39;s disposal schedule</span>
-  <span style="color:#66d9ef">schedule</span>: <span style="color:#e6db74">&#34;* */3 * * *&#34;</span>
-  <span style="color:#66d9ef">strategy</span>:
+  <span style="color:#f92672">schedule</span>: <span style="color:#e6db74">&#34;* */3 * * *&#34;</span>
+  <span style="color:#f92672">strategy</span>:
     <span style="color:#75715e"># Max number of pods to be deleted at the same time</span>
-    <span style="color:#66d9ef">disposalConcurrency</span>: <span style="color:#ae81ff">2</span>
+    <span style="color:#f92672">disposalConcurrency</span>: <span style="color:#ae81ff">2</span>
     <span style="color:#75715e"># Pods that are living over lifespan will be deleted only</span>
-    <span style="color:#66d9ef">lifespan</span>: 12h
+    <span style="color:#f92672">lifespan</span>: <span style="color:#ae81ff">12h</span>
     <span style="color:#75715e"># Number of pods to be kept</span>
-    <span style="color:#66d9ef">minAvailable</span>: <span style="color:#ae81ff">2</span>
+    <span style="color:#f92672">minAvailable</span>: <span style="color:#ae81ff">2</span>
 </code></pre></div><p>You can see the details of each field in the <a href="https://github.com/jlandowner/pod-disposal-operator/blob/master/README.md#crd-details">docs</a>.</p>
 <h3 id="example">Example</h3>
 <p>I prepared a example guide which you can experience how disposal works.</p>
