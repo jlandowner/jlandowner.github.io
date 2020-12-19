@@ -116,15 +116,13 @@ For example, there are some considerations when you apply it."/>
 if the policy is not properly applied to the ReplicaSet Controller as well, the User will be able to run a privileged pod indirectly.</p>
 <p>If you are using other controllers such as DaemonSet Controller or custom Kubernetes Operator to create pods, they must be configured properly as well.</p>
 <h3 id="configure-psp-for-controllers">Configure PSP for Controllers</h3>
-<p>When Controllers create Pods, they use <code>ServiceAccount</code>. So you need to configure that the appropriate PSPs is enabled for the ServiceAccount.</p>
 <p>If a <code>ServiceAccount</code> is specified in a Pod template spec in Deployment, the PSP for the ServiceAccount will be effected. It is same as DaemonSet and StatefulSet.</p>
 <p>On the other hand, when <code>ServiceAccount</code> is NOT specified in the PodSpec, ServiceAccount named <code>default</code> in the Namespace where the Pod is launched will be used.
 <code>default</code> ServiceAccounts exist in every Namespaces by default.</p>
-<p>As you see above, it is complicated and cumbersome to apply PSP to each ServiceAccount individually.</p>
-<p>Though you may think it is better to prevent Deployment which has privileged Pod specification, it cannot be controlled with PSP.
-It is effective and you can do it by implementing validation webhooks on your own, or using an <a href="https://www.openpolicyagent.org/">Open Policy Agent</a>, etc.</p>
+<p>So you need to configure that the appropriate PSPs is enabled for the ServiceAccount.</p>
+<p>You can prevent Deployment which has privileged Pod specification by implementing validation webhooks on your own, or using an <a href="https://www.openpolicyagent.org/">Open Policy Agent</a>, etc.</p>
 <p>However, these are only static validation for the specs.
-Powerful PSP&rsquo;s dynamic validations, such as blocking execution by root user in container when container starting, are difficult to implement on other than PSP.</p>
+The powerful PSP&rsquo;s dynamic validations, such as blocking run as root user in container when kubelet starts the container, are difficult to implement on other than PSP.</p>
 <h3 id="priority-of-psp">Priority of PSP</h3>
 <p>There are a few quirks and caveats about the policy priority when multiple PSPs are enabled.</p>
 <p>The official documentation states:</p>
@@ -145,8 +143,9 @@ Therefore it&rsquo;s better to give up on combining policies to create complex p
 <ul>
 <li>First of all, create two PSPs. one that allows privileges and one that is restricted.</li>
 <li>Next apply the restricted PSP to the entire scope of the cluster like <code>system:authenticated</code> Group.</li>
-<li>Then select the privileged Namespaces such as <code>kube-system</code>. And apply the privileged PSP to administrative Groups such as <code>system:master</code> Group and ServiceAccounts in the privileged Namespaces.</li>
-<li>If there is some applications that cannot run by the restricted PSP due to its behavior or characteristics, add another PSP.</li>
+<li>Then select privileged Namespaces and apply the privileged PSP to the namespaces.</li>
+<li>However in <code>kube-system</code> namespace, you need to attach the privileded PSP to the each ServiceAccounts.</li>
+<li>If there is some applications that cannot run by the restricted PSP due to its behavior or characteristics, add another PSP and attach it to the namespace the apps running.</li>
 <li><strong>You should use &ldquo;psp-util&rdquo;, a kubectl plugin to manipulate PSPs (Important 😊 )</strong>.</li>
 </ul>
 <h3 id="step-by-step-to-configure-pod-security-policy-best-practice">Step by step to configure Pod Security Policy Best Practice</h3>
@@ -294,34 +293,90 @@ Detach a privileged PSP from <code>system:authenticated</code> Group.</p>
 <p><strong>4-2-1. For Administrative Group</strong></p>
 <p>Attach the privileged PSP to <code>system:master</code> Group, an administrative group.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach eks.privileged --group system:master
+</code></pre></div><p>For eks, attach the privileged PSP to <code>eks</code> Group.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach eks.privileged --group eks
 </code></pre></div><p><strong>4-2-1. For ServiceAccounts in privileged Namespace</strong></p>
 <p>Attach the privileged PSP to ServiceAccounts in the privileged Namespace.</p>
-<p>This time, I treat Only <code>kube-system</code> namespace as a privileged Namespace.</p>
-<p>First, attach the privilege to the <code>default</code> ServiceAccount in kube-system.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach eks.privileged --sa default -n kube-system
-</code></pre></div><p>Second, attach the privileged PSP to all ServiceAccounts used by Deployment, DaemonSet and StatefulSet in the <code>kube-system</code>.</p>
+<p>For example treat <code>default</code> namespace as a privileged Namespace.</p>
 <p>Run the following command.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach eks.privileged --group system:serviceaccounts:kube-system
-</code></pre></div><p>In addition, if you want to apply the privileged PSP to ServiceAccounts in other Namespace, change the above commands and execute it.</p>
-<h4 id="5-finished"><strong>5. Finished</strong></h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach eks.privileged --group system:serviceaccounts:default
+</code></pre></div><p>If you want to apply the privileged PSP to ServiceAccounts in other Namespace, change the above commands and execute it.</p>
+<p><strong>4-2-2. For ServiceAccounts in kube-system Namespace</strong></p>
+<p>You need to be careful for attaching the privileged PSP to <code>kube-system</code>.
+There are system controller&rsquo;s ServiceAccounts such as <code>replicaset-controller</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl get sa -n kube-system
+NAME                                 SECRETS   AGE
+alb-ingress-controller               <span style="color:#ae81ff">1</span>         277d
+attachdetach-controller              <span style="color:#ae81ff">1</span>         380d
+aws-cloud-provider                   <span style="color:#ae81ff">1</span>         380d
+aws-node                             <span style="color:#ae81ff">1</span>         380d
+certificate-controller               <span style="color:#ae81ff">1</span>         380d
+clusterrole-aggregation-controller   <span style="color:#ae81ff">1</span>         380d
+coredns                              <span style="color:#ae81ff">1</span>         380d
+cronjob-controller                   <span style="color:#ae81ff">1</span>         380d
+daemon-set-controller                <span style="color:#ae81ff">1</span>         380d
+default                              <span style="color:#ae81ff">1</span>         380d
+deployment-controller                <span style="color:#ae81ff">1</span>         380d
+disruption-controller                <span style="color:#ae81ff">1</span>         380d
+eks-vpc-resource-controller          <span style="color:#ae81ff">1</span>         12d
+endpoint-controller                  <span style="color:#ae81ff">1</span>         380d
+expand-controller                    <span style="color:#ae81ff">1</span>         380d
+generic-garbage-collector            <span style="color:#ae81ff">1</span>         380d
+horizontal-pod-autoscaler            <span style="color:#ae81ff">1</span>         380d
+job-controller                       <span style="color:#ae81ff">1</span>         380d
+kube-proxy                           <span style="color:#ae81ff">1</span>         380d
+kubernetes-route53-sync              <span style="color:#ae81ff">1</span>         87d
+namespace-controller                 <span style="color:#ae81ff">1</span>         380d
+node-controller                      <span style="color:#ae81ff">1</span>         380d
+node-problem-detector                <span style="color:#ae81ff">1</span>         177d
+persistent-volume-binder             <span style="color:#ae81ff">1</span>         380d
+pod-garbage-collector                <span style="color:#ae81ff">1</span>         380d
+pv-protection-controller             <span style="color:#ae81ff">1</span>         380d
+pvc-protection-controller            <span style="color:#ae81ff">1</span>         380d
+replicaset-controller                <span style="color:#ae81ff">1</span>         380d
+replication-controller               <span style="color:#ae81ff">1</span>         380d
+resourcequota-controller             <span style="color:#ae81ff">1</span>         380d
+service-account-controller           <span style="color:#ae81ff">1</span>         380d
+service-controller                   <span style="color:#ae81ff">1</span>         380d
+statefulset-controller               <span style="color:#ae81ff">1</span>         380d
+ttl-controller                       <span style="color:#ae81ff">1</span>         380d
+vpc-resource-controller              <span style="color:#ae81ff">1</span>         12d
+</code></pre></div><p>If you attach the privilleged PSP to <code>replicaset-controller</code>, all of the Pods created from Deployments use the privileged PSP.
+It is invalid configuration and therefore you must attach the privileged PSP to each ServiceAccounts.</p>
+<p>For example, if there are only Pods created by DaemonSets and Deployments in the cluster, you can see the ServiceAccounts by following commands.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># SerivceAccounts used by DaemonSets</span>
+$ kubectl -n kube-system get ds -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span>
+aws-node kube-proxy
+
+<span style="color:#75715e"># SerivceAccounts used by Deployments</span>
+$ kubectl -n kube-system get deploy -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span>
+alb-ingress-controller coredns
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Attaching by one line</span>
+<span style="color:#75715e"># DaemonSet&#39;s ServiceAccounts</span>
+<span style="color:#66d9ef">for</span> i in <span style="color:#66d9ef">$(</span>kubectl -n kube-system get ds -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span><span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> kubectl psp-util attach eks.privileged --sa $i -n kube-system; <span style="color:#66d9ef">done</span>
+
+<span style="color:#75715e"># Deployment&#39;s ServiceAccounts</span>
+<span style="color:#66d9ef">for</span> i in <span style="color:#66d9ef">$(</span>kubectl -n kube-system get deploy -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span><span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> kubectl psp-util attach eks.privileged --sa $i -n kube-system; <span style="color:#66d9ef">done</span>
+</code></pre></div><h4 id="5-finished"><strong>5. Finished</strong></h4>
 <p>That&rsquo;s all. Here is the result of the configuration so far.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl psp-util tree      
 📙 PSP eks.privileged
 └── 📕 ClusterRole eks:podsecuritypolicy:privileged
 └── 📕 ClusterRole psp-util.eks.privileged
     └── 📘 ClusterRoleBinding psp-util.eks.privileged
+        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: eks, Namespace: <span style="color:#f92672">}</span>
         └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:master, Namespace: <span style="color:#f92672">}</span>
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:serviceaccounts:kube-system, Namespace: <span style="color:#f92672">}</span>
-
+        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: aws-node, Namespace: kube-system<span style="color:#f92672">}</span>
+        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: kube-proxy, Namespace: kube-system<span style="color:#f92672">}</span>
+        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: alb-ingress-controller, Namespace: kube-system<span style="color:#f92672">}</span>
+        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: coredns, Namespace: kube-system<span style="color:#f92672">}</span>
 📙 PSP restricted
 └── 📕 ClusterRole psp-util.restricted
     └── 📘 ClusterRoleBinding psp-util.restricted
         └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:authenticated, Namespace: <span style="color:#f92672">}</span>
+        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:unauthenticated, Namespace: <span style="color:#f92672">}</span>
 </code></pre></div><p>If you want another PSP between privileged and restricted PSPs, you should create a dedicated PSP and apply it in the same way as you apply the privileged PSP.</p>
-<p>However the privileged PSP has a first priority when you apply it to which a privileged PSP has been applied.
-So verify and apply it carefully.</p>
-<p>After doing the settings shown above, I recommend you to check whether you can&rsquo;t create a privileged Pod as a general User, or whether you can&rsquo;t start privileged Pods from Deployment outside of <code>kube-system</code> and so on.</p>
-<p>It is difficult to understand the functions until you actually configure and run.</p>
+<p>However the privileged PSP has a first priority. So verify and apply it carefully.</p>
 <p>Have a good k8s experience 👍</p>
 
 	</div>
