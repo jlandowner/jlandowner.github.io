@@ -58,14 +58,18 @@ Background There are three(&#43;α) factors as background of the operator.
 	
 	<div id="avatar">
 		<a href="https://blog.jlandowner.com/">
-			<img src="/img/avator.png" alt="landscape">
+		  <img src="/img/avator.png" alt="landscape">
 		</a>
 	</div>
 	
 	<div id="titletext"><h2 id="title"><a href="https://blog.jlandowner.com/">landscape</a></h2></div>
-	<div id="title-description"><p id="subtitle">Deep think, Easy go.</p><div id=social>
+	<div id="title-description"><p id="subtitle">Deep think, Easy go.</p><div id="social">
 			<nav>
-				<ul><li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li><li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li><li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li><li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li></ul>
+				<ul>
+					<li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li>
+					<li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li>
+					<li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li>
+					<li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li></ul>
 			</nav>
 		</div>
 	</div>
@@ -120,7 +124,7 @@ Background There are three(&#43;α) factors as background of the operator.
 <li>(wanted to use kubebuilder)</li>
 </ul>
 <h4 id="descheduler"><strong>Descheduler</strong></h4>
-<p><a href="https://github.com/kubernetes-sigs/descheduler">Descheduler</a> is generally used to relocate running Pods.
+<p><a href="https://github.com/kubernetes-sigs/descheduler" target="_blank">Descheduler</a> is generally used to relocate running Pods.
 Descheduler has an advantage that you can configure a variety of policies, strategies and options.
 However, it has another aspect that is therefore not easy to configure sometimes.</p>
 <p>Also it is common to run Descenduler by cronjob in the cluster. But in a each Job execution, it will target to all Pods in the cluster excluding some Pods.
@@ -155,7 +159,7 @@ Pod Disposal Operator watchs custom resources called the <code>PodDisposalSchedu
 Depending on the behavior/charactoristic of your application, you can rotate a large number of pods at once during small traffic-coming periods, or remove a small number of pods more frequently.</p>
 </li>
 <li>
-<p>Combined with Kubernetes distributed scheduling mechanisms such as <a href="https://kubernetes.io/ja/docs/concepts/configuration/assign-pod-node/#inter-pod-affinity-anti-affinity">Inter-Pod Anti-Affinity</a> and <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/">Pod Topology Spread Constraints</a>, the possibility that pods will be properly relocated in recreation after disposal may increase.</p>
+<p>Combined with Kubernetes distributed scheduling mechanisms such as <a href="https://kubernetes.io/ja/docs/concepts/configuration/assign-pod-node/#inter-pod-affinity-anti-affinity" target="_blank">Inter-Pod Anti-Affinity</a> and <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/" target="_blank">Pod Topology Spread Constraints</a>, the possibility that pods will be properly relocated in recreation after disposal may increase.</p>
 </li>
 </ul>
 <h3 id="get-started">Get started</h3>
@@ -185,7 +189,7 @@ Sample configuration is as following.</p>
     <span style="color:#f92672">lifespan</span>: <span style="color:#ae81ff">12h</span>
     <span style="color:#75715e"># Number of pods to be kept</span>
     <span style="color:#f92672">minAvailable</span>: <span style="color:#ae81ff">2</span>
-</code></pre></div><p>You can see the details of each field in the <a href="https://github.com/jlandowner/pod-disposal-operator/blob/master/README.md#crd-details">docs</a>.</p>
+</code></pre></div><p>You can see the details of each field in the <a href="https://github.com/jlandowner/pod-disposal-operator/blob/master/README.md#crd-details" target="_blank">docs</a>.</p>
 <h3 id="example">Example</h3>
 <p>I prepared a example guide which you can experience how disposal works.</p>
 <p>See <a href="https://github.com/jlandowner/pod-disposal-operator/tree/master/example">https://github.com/jlandowner/pod-disposal-operator/tree/master/example</a></p>
@@ -226,13 +230,13 @@ Sample configuration is as following.</p>
 			
 			
 			
-			<a href="https://blog.jlandowner.com/tags/kubernetes/"> kubernetes </a>
+			<a href="/tags/kubernetes/"> kubernetes </a>
 			
 			
 			
 			
 			
-			<a href="https://blog.jlandowner.com/tags/kubernetes-operator/"> kubernetes-operator </a>
+			<a href="/tags/kubernetes-operator/"> kubernetes-operator </a>
 			
 			
 			
@@ -244,7 +248,7 @@ Sample configuration is as following.</p>
 			
 			
 			
-			<a href="https://blog.jlandowner.com/tags/works/"> works </a>
+			<a href="/tags/works/"> works </a>
 			
 			
 			

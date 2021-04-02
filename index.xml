@@ -18,9 +18,9 @@
 			
 			<guid>https://blog.jlandowner.com/posts/deepdive-into-kubernetes-probes-period-seconds/</guid>
 			<description>
-				
-				Kubernetes has a container’s health check mechanism called Probe. This might be a common feature for almost Kubern...
-				
+			
+				Kubernetes has a container’s health check mechanism called Probe. This might be a common feature for almost Kubernetes users. …
+			
 			</description>
 		</item>
 		<item>
@@ -30,9 +30,9 @@
 			
 			<guid>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</guid>
 			<description>
-				
-				Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes clus...
-				
+			
+				Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you …
+			
 			</description>
 		</item>
 		<item>
@@ -42,9 +42,9 @@
 			
 			<guid>https://blog.jlandowner.com/posts/introducing-pod-disposal-operator/</guid>
 			<description>
-				
-				I have released my new work 🚀 called Pod Disposal Operator, a Kubernetes Operator for automatic pod relocating and contr...
-				
+			
+				I have released my new work 🚀 called Pod Disposal Operator, a Kubernetes Operator for automatic pod relocating and controlled …
+			
 			</description>
 		</item>
 		<item>
@@ -54,12 +54,12 @@
 			
 			<guid>https://blog.jlandowner.com/posts/first-article/</guid>
 			<description>
-				
+			
 				Hello, world.
 Starting a new personal site.
 I would like to post about my works and daily thoughts.
 
-				
+			
 			</description>
 		</item>
 		<item>
@@ -69,10 +69,10 @@ I would like to post about my works and daily thoughts.
 			
 			<guid>https://blog.jlandowner.com/about/</guid>
 			<description>
-				
-				A bottom developer walking arround Cloud Architecture, Developer Experiences, Kubernetes and Linux.
-Now working on a Kub...
-				
+			
+				System Engineer walking arround Cloud Architecture, Developer Experiences, Kubernetes and Linux.
+Now working on a Kubernetes-based platform …
+			
 			</description>
 		</item>
 		

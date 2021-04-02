@@ -18,9 +18,9 @@
 			
 			<guid>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</guid>
 			<description>
-				
-				Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes clus...
-				
+			
+				Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you …
+			
 			</description>
 		</item>
 		<item>
@@ -30,9 +30,9 @@
 			
 			<guid>https://blog.jlandowner.com/posts/introducing-pod-disposal-operator/</guid>
 			<description>
-				
-				I have released my new work 🚀 called Pod Disposal Operator, a Kubernetes Operator for automatic pod relocating and contr...
-				
+			
+				I have released my new work 🚀 called Pod Disposal Operator, a Kubernetes Operator for automatic pod relocating and controlled …
+			
 			</description>
 		</item>
 		

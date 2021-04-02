@@ -54,14 +54,18 @@ For example, there are some considerations when you apply it."/>
 	
 	<div id="avatar">
 		<a href="https://blog.jlandowner.com/">
-			<img src="/img/avator.png" alt="landscape">
+		  <img src="/img/avator.png" alt="landscape">
 		</a>
 	</div>
 	
 	<div id="titletext"><h2 id="title"><a href="https://blog.jlandowner.com/">landscape</a></h2></div>
-	<div id="title-description"><p id="subtitle">Deep think, Easy go.</p><div id=social>
+	<div id="title-description"><p id="subtitle">Deep think, Easy go.</p><div id="social">
 			<nav>
-				<ul><li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li><li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li><li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li><li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li></ul>
+				<ul>
+					<li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li>
+					<li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li>
+					<li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li>
+					<li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li></ul>
 			</nav>
 		</div>
 	</div>
@@ -104,7 +108,7 @@ For example, there are some considerations when you apply it."/>
 		</div>
 	</div>
 	<div class="markdown">
-		<p><a href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/">Pod Security Policy (PSP)</a> is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level.</p>
+		<p><a href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/" target="_blank">Pod Security Policy (PSP)</a> is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level.</p>
 <p>While <code>Pod Security Policy</code> enables effective and powerful policy control in multi-tenant clusters, I think it&rsquo;s a tough job to enforce strict policy control as you expected.</p>
 <p>For example, there are some considerations when you apply it.</p>
 <p>It&rsquo;s relatively easy to configure like that: <em>for User A to create a privileged pod, but not for User B.</em></p>
@@ -120,7 +124,7 @@ if the policy is not properly applied to the ReplicaSet Controller as well, the 
 <p>On the other hand, when <code>ServiceAccount</code> is NOT specified in the PodSpec, ServiceAccount named <code>default</code> in the Namespace where the Pod is launched will be used.
 <code>default</code> ServiceAccounts exist in every Namespaces by default.</p>
 <p>So you need to configure that the appropriate PSPs is enabled for the ServiceAccount.</p>
-<p>You can prevent Deployment which has privileged Pod specification by implementing validation webhooks on your own, or using an <a href="https://www.openpolicyagent.org/">Open Policy Agent</a>, etc.</p>
+<p>You can prevent Deployment which has privileged Pod specification by implementing validation webhooks on your own, or using an <a href="https://www.openpolicyagent.org/" target="_blank">Open Policy Agent</a>, etc.</p>
 <p>However, these are only static validation for the specs.
 The powerful PSP&rsquo;s dynamic validations, such as blocking run as root user in container when kubelet starts the container, are difficult to implement on other than PSP.</p>
 <h3 id="priority-of-psp">Priority of PSP</h3>
@@ -152,10 +156,10 @@ Therefore it&rsquo;s better to give up on combining policies to create complex p
 <p>Here&rsquo;s an example of how to set it up as described in My Best Practice.</p>
 <h4 id="1-install-the-kubectl-plugin-psp-util"><strong>1. Install the kubectl plugin &ldquo;psp-util&rdquo;</strong></h4>
 <p>Pod Security Policy is defined as a kubernetes resource <code>PodSecurityPolicy</code>, which is bound to <code>Group</code> or <code>ServiceAccount</code> using <code>ClusterRole</code> and <code>ClusterRoleBinding</code>.</p>
-<p>A Kubectl plugin called <strong><a href="https://github.com/jlandowner/psp-util">&ldquo;psp-util&rdquo;</a></strong> is available 🚀 on <a href="https://github.com/kubernetes-sigs/krew"><code>Krew</code></a>, an official plugin manager of Kubectl.</p>
+<p>A Kubectl plugin called <strong><a href="https://github.com/jlandowner/psp-util" target="_blank">&amp;ldquo;psp-util&amp;rdquo;</a></strong> is available 🚀 on <a href="https://github.com/kubernetes-sigs/krew" target="_blank">&lt;code&gt;Krew&lt;/code&gt;</a>, an official plugin manager of Kubectl.</p>
 <p>It helps you to manage Pod Security Policy with the associated RBAC resources.</p>
 <p>You can view the relations between policies and objects in your cluster, and easily attach and detach the policies.</p>
-<p>After <a href="https://krew.sigs.k8s.io/docs/user-guide/setup/install/">installing Krew</a>, you can install <code>psp-util</code> by the following command</p>
+<p>After <a href="https://krew.sigs.k8s.io/docs/user-guide/setup/install/" target="_blank">installing Krew</a>, you can install <code>psp-util</code> by the following command</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl krew install psp-util
 </code></pre></div><h4 id="2-see-the-current-settings"><strong>2. See the current settings</strong></h4>
 <p>I will proceed with EKS as an example, since the environment I usually touch is EKS.</p>
@@ -213,7 +217,7 @@ eks.privileged   true    *      RunAsAny   RunAsAny           RunAsAny    RunAsA
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl apply -f psp-privileged.yaml
 </code></pre></div><p>It&rsquo;s also ok to create another PSP that suits your environment if you want a more restricted PSP for the privileged namespace and pods.</p>
 <p><strong>3-2. Create a restricted PSP</strong></p>
-<p>As a restricted PSP, it&rsquo;s the best to create the PSP in the <a href="https://aws.github.io/aws-eks-best-practices/pods/#recommendations">EKS Best Practices Recommendations</a> published by AWS.</p>
+<p>As a restricted PSP, it&rsquo;s the best to create the PSP in the <a href="https://aws.github.io/aws-eks-best-practices/pods/#recommendations" target="_blank">EKS Best Practices Recommendations</a> published by AWS.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml:psp-restricted.yaml" data-lang="yaml:psp-restricted.yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">policy/v1beta1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PodSecurityPolicy</span>
 <span style="color:#f92672">metadata</span>:
@@ -264,7 +268,7 @@ eks.privileged   true    *      RunAsAny   RunAsAny           RunAsAny    RunAsA
     <span style="color:#f92672">readOnlyRootFilesystem</span>: <span style="color:#66d9ef">false</span>
 </code></pre></div><p>Create an above configuration file and apply it.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl apply -f psp-restricted.yaml
-</code></pre></div><p>If your application is already running in a cluster and you want to define a restriction policy within the limits of the current running app, you can use <a href="https://github.com/sysdiglabs/kube-psp-advisor">kube-psp-advisor</a> maintained by Sysdig. It automatically generates the appropriate PSP.</p>
+</code></pre></div><p>If your application is already running in a cluster and you want to define a restriction policy within the limits of the current running app, you can use <a href="https://github.com/sysdiglabs/kube-psp-advisor" target="_blank">kube-psp-advisor</a> maintained by Sysdig. It automatically generates the appropriate PSP.</p>
 <p>It is also available on Krew.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl krew install advise-psp
 </code></pre></div><p>The <code>inspect</code> command automatically generates PSP by given Namespace where the target application is currently running.
@@ -406,7 +410,7 @@ alb-ingress-controller coredns
 			
 			
 			
-			<a href="https://blog.jlandowner.com/tags/krew/"> krew </a>
+			<a href="/tags/krew/"> krew </a>
 			
 			
 			
@@ -414,7 +418,7 @@ alb-ingress-controller coredns
 			
 			
 			
-			<a href="https://blog.jlandowner.com/tags/kubernetes/"> kubernetes </a>
+			<a href="/tags/kubernetes/"> kubernetes </a>
 			
 			
 			
@@ -426,13 +430,13 @@ alb-ingress-controller coredns
 			
 			
 			
-			<a href="https://blog.jlandowner.com/tags/pod-security-policy/"> pod-security-policy </a>
+			<a href="/tags/pod-security-policy/"> pod-security-policy </a>
 			
 			
 			
 			
 			
-			<a href="https://blog.jlandowner.com/tags/works/"> works </a>
+			<a href="/tags/works/"> works </a>
 			
 			
 			

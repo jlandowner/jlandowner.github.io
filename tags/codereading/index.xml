@@ -18,9 +18,9 @@
 			
 			<guid>https://blog.jlandowner.com/posts/deepdive-into-kubernetes-probes-period-seconds/</guid>
 			<description>
-				
-				Kubernetes has a container’s health check mechanism called Probe. This might be a common feature for almost Kubern...
-				
+			
+				Kubernetes has a container’s health check mechanism called Probe. This might be a common feature for almost Kubernetes users. …
+			
 			</description>
 		</item>
 		
