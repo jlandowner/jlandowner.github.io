@@ -19,7 +19,8 @@
 			<guid>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</guid>
 			<description>
 			
-				Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you …
+				Update Apr 7 2021 Pod Security Policy is depricated in Kubernetes v1.21 and will be removed v1.25.
+Now, the next of PSP is considered. In …
 			
 			</description>
 		</item>

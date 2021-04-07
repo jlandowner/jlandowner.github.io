@@ -33,18 +33,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="keywords" content="works,Kubernetes,Pod Security Policy,Krew"><meta property="og:title" content="Pod Security Policy Best Practice for multi-tenant cluster" />
-<meta property="og:description" content="Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level.
-While Pod Security Policy enables effective and powerful policy control in multi-tenant clusters, I think it&rsquo;s a tough job to enforce strict policy control as you expected.
-For example, there are some considerations when you apply it." />
+<meta property="og:description" content="Update Apr 7 2021 Pod Security Policy is depricated in Kubernetes v1.21 and will be removed v1.25.
+Now, the next of PSP is considered. In the future, external open source tools such as Open Policy Agent will be recommended for complex controls. And PSP Replacement Policy (temporary name) will be implemented in Kubernetes as a simpler and clearer security feature.
+See the details at the blog:
+https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/
+Pod Security Policy Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://blog.jlandowner.com/posts/pod-security-policy-best-practice/" />
 <meta property="article:published_time" content="2020-08-04T01:06:48+09:00" />
 <meta property="article:modified_time" content="2020-08-04T01:06:48+09:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Pod Security Policy Best Practice for multi-tenant cluster"/>
-<meta name="twitter:description" content="Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level.
-While Pod Security Policy enables effective and powerful policy control in multi-tenant clusters, I think it&rsquo;s a tough job to enforce strict policy control as you expected.
-For example, there are some considerations when you apply it."/>
+<meta name="twitter:description" content="Update Apr 7 2021 Pod Security Policy is depricated in Kubernetes v1.21 and will be removed v1.25.
+Now, the next of PSP is considered. In the future, external open source tools such as Open Policy Agent will be recommended for complex controls. And PSP Replacement Policy (temporary name) will be implemented in Kubernetes as a simpler and clearer security feature.
+See the details at the blog:
+https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/
+Pod Security Policy Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level."/>
 
   <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.com/css/normalize.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.com/css/main.css" />
@@ -108,7 +112,15 @@ For example, there are some considerations when you apply it."/>
 		</div>
 	</div>
 	<div class="markdown">
-		<p><a href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/" target="_blank">Pod Security Policy (PSP)</a> is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level.</p>
+		<h1 id="update-apr-7-2021">Update Apr 7 2021</h1>
+<p>Pod Security Policy is depricated in Kubernetes v1.21 and will be removed v1.25.</p>
+<p>Now, the next of PSP is considered.
+In the future, external open source tools such as Open Policy Agent will be recommended for complex controls.
+And PSP Replacement Policy (temporary name) will be implemented in Kubernetes as a simpler and clearer security feature.</p>
+<p>See the details at the blog:</p>
+<p><a href="https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/">https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/</a></p>
+<h1 id="pod-security-policy">Pod Security Policy</h1>
+<p><a href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/" target="_blank">Pod Security Policy (PSP)</a> is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level.</p>
 <p>While <code>Pod Security Policy</code> enables effective and powerful policy control in multi-tenant clusters, I think it&rsquo;s a tough job to enforce strict policy control as you expected.</p>
 <p>For example, there are some considerations when you apply it.</p>
 <p>It&rsquo;s relatively easy to configure like that: <em>for User A to create a privileged pod, but not for User B.</em></p>
