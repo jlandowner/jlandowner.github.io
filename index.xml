@@ -7,8 +7,20 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>© 2021 jlandowner | Vitae theme for Hugo</copyright>
-		<lastBuildDate>Sun, 16 Aug 2020 14:34:48 +0900</lastBuildDate>
+		<lastBuildDate>Fri, 11 Feb 2022 14:00:00 +0900</lastBuildDate>
 		<atom:link href="https://blog.jlandowner.dev/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>GPGキー関連のコマンド</title>
+			<link>https://blog.jlandowner.dev/posts/gpg/</link>
+			<pubDate>Fri, 11 Feb 2022 14:00:00 +0900</pubDate>
+			<guid>https://blog.jlandowner.dev/posts/gpg/</guid>
+			<description>
+			いつもコマンドを忘れるのでまとめる。
+プライマリキー生成 ed25519でキーを生成には--expertオプションが必要。
+プライマリキーは無期限にし、オフラインで管理する。
+$ gpg --expert --full-gen-key gpg (GnuPG) 2.2.20; …
+			</description>
+		</item>
 		<item>
 			<title>Deepdive into Kubernetes Probe&#39;s period seconds</title>
 			<link>https://blog.jlandowner.dev/posts/deepdive-into-kubernetes-probes-period-seconds/</link>
