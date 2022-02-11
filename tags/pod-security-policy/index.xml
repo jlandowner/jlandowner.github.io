@@ -2,28 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Pod Security Policy on landscape</title>
-		<link>https://blog.jlandowner.com/tags/pod-security-policy/</link>
-		<description>Recent content in Pod Security Policy on blog.jlandowner.com</description>
+		<link>https://blog.jlandowner.dev/tags/pod-security-policy/</link>
+		<description>Recent content in Pod Security Policy on blog.jlandowner.dev</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
 		<lastBuildDate>Tue, 04 Aug 2020 01:06:48 +0900</lastBuildDate>
-		
-		<atom:link href="https://blog.jlandowner.com/tags/pod-security-policy/index.xml" rel="self" type="application/rss+xml" />
-		
+		<atom:link href="https://blog.jlandowner.dev/tags/pod-security-policy/index.xml" rel="self" type="application/rss+xml" />
 		<item>
 			<title>Pod Security Policy Best Practice for multi-tenant cluster</title>
-			<link>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</link>
+			<link>https://blog.jlandowner.dev/posts/pod-security-policy-best-practice/</link>
 			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/posts/pod-security-policy-best-practice/</guid>
+			<guid>https://blog.jlandowner.dev/posts/pod-security-policy-best-practice/</guid>
 			<description>
-			
-				Update Apr 7 2021 Pod Security Policy is depricated in Kubernetes v1.21 and will be removed v1.25.
+			Update Apr 7 2021 Pod Security Policy is depricated in Kubernetes v1.21 and will be removed v1.25.
 Now, the next of PSP is considered. In …
-			
 			</description>
 		</item>
-		
 	</channel>
 </rss>

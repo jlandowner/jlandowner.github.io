@@ -2,99 +2,75 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Tags on landscape</title>
-		<link>https://blog.jlandowner.com/tags/</link>
-		<description>Recent content in Tags on blog.jlandowner.com</description>
+		<link>https://blog.jlandowner.dev/tags/</link>
+		<description>Recent content in Tags on blog.jlandowner.dev</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
 		<lastBuildDate>Sun, 16 Aug 2020 14:34:48 +0900</lastBuildDate>
-		
-		<atom:link href="https://blog.jlandowner.com/tags/index.xml" rel="self" type="application/rss+xml" />
-		
+		<atom:link href="https://blog.jlandowner.dev/tags/index.xml" rel="self" type="application/rss+xml" />
 		<item>
 			<title>CodeReading</title>
-			<link>https://blog.jlandowner.com/tags/codereading/</link>
+			<link>https://blog.jlandowner.dev/tags/codereading/</link>
 			<pubDate>Sun, 16 Aug 2020 14:34:48 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/tags/codereading/</guid>
+			<guid>https://blog.jlandowner.dev/tags/codereading/</guid>
 			<description>
-			
-				
 			
 			</description>
 		</item>
 		<item>
 			<title>Kubernetes</title>
-			<link>https://blog.jlandowner.com/tags/kubernetes/</link>
+			<link>https://blog.jlandowner.dev/tags/kubernetes/</link>
 			<pubDate>Sun, 16 Aug 2020 14:34:48 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/tags/kubernetes/</guid>
+			<guid>https://blog.jlandowner.dev/tags/kubernetes/</guid>
 			<description>
-			
-				
 			
 			</description>
 		</item>
 		<item>
 			<title>Krew</title>
-			<link>https://blog.jlandowner.com/tags/krew/</link>
+			<link>https://blog.jlandowner.dev/tags/krew/</link>
 			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/tags/krew/</guid>
+			<guid>https://blog.jlandowner.dev/tags/krew/</guid>
 			<description>
-			
-				
 			
 			</description>
 		</item>
 		<item>
 			<title>Pod Security Policy</title>
-			<link>https://blog.jlandowner.com/tags/pod-security-policy/</link>
+			<link>https://blog.jlandowner.dev/tags/pod-security-policy/</link>
 			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/tags/pod-security-policy/</guid>
+			<guid>https://blog.jlandowner.dev/tags/pod-security-policy/</guid>
 			<description>
-			
-				
 			
 			</description>
 		</item>
 		<item>
 			<title>works</title>
-			<link>https://blog.jlandowner.com/tags/works/</link>
+			<link>https://blog.jlandowner.dev/tags/works/</link>
 			<pubDate>Tue, 04 Aug 2020 01:06:48 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/tags/works/</guid>
+			<guid>https://blog.jlandowner.dev/tags/works/</guid>
 			<description>
-			
-				
 			
 			</description>
 		</item>
 		<item>
 			<title>Kubernetes Operator</title>
-			<link>https://blog.jlandowner.com/tags/kubernetes-operator/</link>
+			<link>https://blog.jlandowner.dev/tags/kubernetes-operator/</link>
 			<pubDate>Sat, 27 Jun 2020 12:46:08 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/tags/kubernetes-operator/</guid>
+			<guid>https://blog.jlandowner.dev/tags/kubernetes-operator/</guid>
 			<description>
-			
-				
 			
 			</description>
 		</item>
 		<item>
 			<title>daily</title>
-			<link>https://blog.jlandowner.com/tags/daily/</link>
+			<link>https://blog.jlandowner.dev/tags/daily/</link>
 			<pubDate>Tue, 19 May 2020 14:08:57 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/tags/daily/</guid>
+			<guid>https://blog.jlandowner.dev/tags/daily/</guid>
 			<description>
-			
-				
 			
 			</description>
 		</item>
-		
 	</channel>
 </rss>

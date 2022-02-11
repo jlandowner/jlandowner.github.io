@@ -2,27 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Kubernetes Operator on landscape</title>
-		<link>https://blog.jlandowner.com/tags/kubernetes-operator/</link>
-		<description>Recent content in Kubernetes Operator on blog.jlandowner.com</description>
+		<link>https://blog.jlandowner.dev/tags/kubernetes-operator/</link>
+		<description>Recent content in Kubernetes Operator on blog.jlandowner.dev</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>© 2020 jlandowner | Vitae theme for Hugo</copyright>
 		<lastBuildDate>Sat, 27 Jun 2020 12:46:08 +0900</lastBuildDate>
-		
-		<atom:link href="https://blog.jlandowner.com/tags/kubernetes-operator/index.xml" rel="self" type="application/rss+xml" />
-		
+		<atom:link href="https://blog.jlandowner.dev/tags/kubernetes-operator/index.xml" rel="self" type="application/rss+xml" />
 		<item>
 			<title>Introducing Pod Disposal Operator</title>
-			<link>https://blog.jlandowner.com/posts/introducing-pod-disposal-operator/</link>
+			<link>https://blog.jlandowner.dev/posts/introducing-pod-disposal-operator/</link>
 			<pubDate>Sat, 27 Jun 2020 12:46:08 +0900</pubDate>
-			
-			<guid>https://blog.jlandowner.com/posts/introducing-pod-disposal-operator/</guid>
+			<guid>https://blog.jlandowner.dev/posts/introducing-pod-disposal-operator/</guid>
 			<description>
-			
-				I have released my new work 🚀 called Pod Disposal Operator, a Kubernetes Operator for automatic pod relocating and controlled …
-			
+			I have released my new work 🚀 called Pod Disposal Operator, a Kubernetes Operator for automatic pod relocating and controlled …
 			</description>
 		</item>
-		
 	</channel>
 </rss>

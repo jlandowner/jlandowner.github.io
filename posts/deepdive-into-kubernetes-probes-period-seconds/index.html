@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-  <link rel="apple-touch-icon" sizes="57x57" href="https://blog.jlandowner.com/favicon/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="https://blog.jlandowner.com/favicon/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="https://blog.jlandowner.com/favicon/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="https://blog.jlandowner.com/favicon/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="https://blog.jlandowner.com/favicon/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="https://blog.jlandowner.com/favicon/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="https://blog.jlandowner.com/favicon/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="https://blog.jlandowner.com/favicon/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://blog.jlandowner.com/favicon/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="https://blog.jlandowner.com/favicon/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://blog.jlandowner.com/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="https://blog.jlandowner.com/favicon/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://blog.jlandowner.com/favicon/favicon-16x16.png">
-  <link rel="manifest" href="https://blog.jlandowner.com/favicon/manifest.json">
+<html lang="en">
+<head>
+  <link rel="apple-touch-icon" sizes="57x57" href="https://blog.jlandowner.dev/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="https://blog.jlandowner.dev/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="https://blog.jlandowner.dev/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://blog.jlandowner.dev/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="https://blog.jlandowner.dev/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="https://blog.jlandowner.dev/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="https://blog.jlandowner.dev/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://blog.jlandowner.dev/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://blog.jlandowner.dev/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="https://blog.jlandowner.dev/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://blog.jlandowner.dev/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="https://blog.jlandowner.dev/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://blog.jlandowner.dev/favicon/favicon-16x16.png">
+  <link rel="manifest" href="https://blog.jlandowner.dev/favicon/manifest.json">
   <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="https://blog.jlandowner.com/favicon/ms-icon-144x144.png">
+  <meta name="msapplication-TileImage" content="https://blog.jlandowner.dev/favicon/ms-icon-144x144.png">
   <meta name="theme-color" content="#ffffff">
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170607476-1"></script>
@@ -39,7 +40,7 @@ Now at v1.18, there are three types of probes ➡️ Liveness Probe, Readiness P
 Though these three types of probes are different only in their behavior when a health check fails, the basic mechanism of the health check itself is not so different.
 Also Probes has three types of health checks ➡️ command execution, TCP or HTTP request." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://blog.jlandowner.com/posts/deepdive-into-kubernetes-probes-period-seconds/" />
+<meta property="og:url" content="https://blog.jlandowner.dev/posts/deepdive-into-kubernetes-probes-period-seconds/" />
 <meta property="article:published_time" content="2020-08-16T14:34:48+09:00" />
 <meta property="article:modified_time" content="2020-08-16T14:34:48+09:00" />
 <meta name="twitter:card" content="summary"/>
@@ -50,69 +51,67 @@ Now at v1.18, there are three types of probes ➡️ Liveness Probe, Readiness P
 Though these three types of probes are different only in their behavior when a health check fails, the basic mechanism of the health check itself is not so different.
 Also Probes has three types of health checks ➡️ command execution, TCP or HTTP request."/>
 
-  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.com/css/normalize.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.com/css/main.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.com/css/all.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/main.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/all.css" />
 <title>Deepdive into Kubernetes Probe&#39;s period seconds | landscape</title></head>
-<body><header>
-	
-	<div id="avatar">
-		<a href="https://blog.jlandowner.com/">
-		  <img src="/img/avator.png" alt="landscape">
-		</a>
-	</div>
-	
-	<div id="titletext"><h2 id="title"><a href="https://blog.jlandowner.com/">landscape</a></h2></div>
-	<div id="title-description"><p id="subtitle">Deep think, Easy go.</p><div id="social">
-			<nav>
-				<ul>
-					<li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li>
-					<li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li>
-					<li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li>
-					<li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li></ul>
-			</nav>
-		</div>
-	</div>
-	
-	<div id="mainmenu">
-		<nav>
-			<ul>
-				
-				<li><a href="/">Home</a></li>
-				
-				<li><a href="/posts">All Posts</a></li>
-				
-				<li><a href="/about">About</a></li>
-				
-				<li><a href="/tags">Tags</a></li>
-				
-			</ul>
-		</nav>
-	</div>
-	
+<body>
+<header>
+<div id="avatar">
+<a href="https://blog.jlandowner.dev/"><img src="/img/avator.png" alt="landscape"></a>
+</div>
+<div id="titletext">
+<h2 id="title"><a href="https://blog.jlandowner.dev/">landscape</a></h2>
+</div>
+<div id="title-description">
+<p id="subtitle">Deep think, Easy go.</p>
+<div id="social">
+<nav><ul>
+<li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li>
+<li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li>
+<li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li>
+<li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li>
+<li><a><i title="Switch Dark Mode" class="dark-mode icons fas fa-moon"></i></a></li>
+</ul></nav>
+</div>
+</div>
+<div id="mainmenu">
+<nav>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/posts">All Posts</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="/tags">Tags</a></li>
+</ul>
+</nav>
+</div>
 </header>
-<main><div class="post">
-	
-	<div class="author">
-	
-	</div>
-	<div class="post-header">
-	
-		<div class="meta">
-			
-			<div class="date">
-				<span class="day">16</span>
-				<span class="rest">Aug 2020</span>
-			</div>
-			
-		</div>
-		
-		<div class="matter">
-			<h1 class="title">Deepdive into Kubernetes Probe&#39;s period seconds</h1>
-		</div>
-	</div>
-	<div class="markdown">
-		<p>Kubernetes has a container&rsquo;s health check mechanism called <code>Probe</code>.
+<main>
+<div class="post">
+<article>
+<div class="post-header">
+<div class="meta">
+<div class="date">
+<span class="day">16</span>
+<span class="rest">Aug 2020</span>
+</div>
+</div>
+<div class="matter">
+<h1 class="title">Deepdive into Kubernetes Probe&#39;s period seconds</h1>
+<p class="post-meta">
+<span class="post-meta">
+
+
+
+
+
+</span>
+
+</p>
+</div>
+</div>
+<div class="markdown">
+<p>Kubernetes has a container&rsquo;s health check mechanism called <code>Probe</code>.
 This might be a common feature for almost Kubernetes users.</p>
 <p><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/</a></p>
 <p>Now at v1.18, there are three types of probes ➡️ <code>Liveness Probe</code>, <code>Readiness Probe</code> and <code>Startup Probe</code>.</p>
@@ -267,79 +266,25 @@ When a Probe takes longer than 3 seconds, the next Probe will start as soon as t
 Even if you are not a Kubernetes developer or contributor, reading codes(or even only comments) will give you some good tips.</p>
 <p>Have a better k8s life 🙌</p>
 
-	</div>
-	
-	
-	
-	
-	
-		
-	
-	
-	
-	<div class="tags">
-		<div class="taxosfloating_left">
-			<p>Tags</p>
-		</div>
-		<div class="termsfloating_right">
-			<p>
-			
-			
-			
-			<a href="/tags/codereading/"> codereading </a>
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			<a href="/tags/kubernetes/"> kubernetes </a>
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			</p>
-		</div>
-		<div class="clearit"></div>
-		
-		
-		
-		
-		
-	</div></div>
-
-  </main>
+</div>
+<div class="tags">
+<div class="taxosfloating_left">
+<p>Tags</p>
+</div>
+<div class="termsfloating_right">
+<p>
+<a href="/tags/codereading/">codereading</a>
+<a href="/tags/kubernetes/">kubernetes</a>
+</p>
+</div>
+<div class="clearit"></div>
+</div>
+</article>
+</div>
+</main>
 <footer>
-	 © 2020 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae">Vitae</a> theme for <a href="https://gohugo.io">Hugo</a> 
-	
-	
-	
-</footer>
-
+© 2020 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae">Vitae</a> theme for <a href="https://gohugo.io">Hugo</a>
+</footer><script src="/js/dark-mode.js"></script>
 
 </body>
 </html>
