@@ -29,7 +29,7 @@
   </script>
 
 
-  <meta name="generator" content="Hugo 0.75.1" />
+  <meta name="generator" content="Hugo 0.96.0" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,9 +40,10 @@ See the details at the blog:
 https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/
 Pod Security Policy Pod Security Policy (PSP) is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://blog.jlandowner.dev/posts/pod-security-policy-best-practice/" />
+<meta property="og:url" content="https://blog.jlandowner.dev/posts/pod-security-policy-best-practice/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-08-04T01:06:48+09:00" />
 <meta property="article:modified_time" content="2020-08-04T01:06:48+09:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Pod Security Policy Best Practice for multi-tenant cluster"/>
 <meta name="twitter:description" content="Update Apr 7 2021 Pod Security Policy is depricated in Kubernetes v1.21 and will be removed v1.25.
@@ -117,7 +118,7 @@ Pod Security Policy Pod Security Policy (PSP) is a feature of Kubernetes that en
 In the future, external open source tools such as Open Policy Agent will be recommended for complex controls.
 And PSP Replacement Policy (temporary name) will be implemented in Kubernetes as a simpler and clearer security feature.</p>
 <p>See the details at the blog:</p>
-<p><a href="https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/">https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/</a></p>
+<p><a href="https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/" target="_blank">https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/</a></p>
 <h3 id="pod-security-policy">Pod Security Policy</h3>
 <p><a href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/" target="_blank">Pod Security Policy (PSP)</a> is a feature of Kubernetes that enable security policies for Pods in an entire Kubernetes cluster, and allows you to control the availability of Pods based on their security level.</p>
 <p>While <code>Pod Security Policy</code> enables effective and powerful policy control in multi-tenant clusters, I think it&rsquo;s a tough job to enforce strict policy control as you expected.</p>
@@ -171,226 +172,226 @@ Therefore it&rsquo;s better to give up on combining policies to create complex p
 <p>It helps you to manage Pod Security Policy with the associated RBAC resources.</p>
 <p>You can view the relations between policies and objects in your cluster, and easily attach and detach the policies.</p>
 <p>After <a href="https://krew.sigs.k8s.io/docs/user-guide/setup/install/" target="_blank">installing Krew</a>, you can install <code>psp-util</code> by the following command</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl krew install psp-util
-</code></pre></div><h4 id="2-see-the-current-settings"><strong>2. See the current settings</strong></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl krew install psp-util
+</span></span></code></pre></div><h4 id="2-see-the-current-settings"><strong>2. See the current settings</strong></h4>
 <p>I will proceed with EKS as an example, since the environment I usually touch is EKS.</p>
 <p>First, check current PSPs in cluster.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl get psp
-NAME             PRIV    CAPS   SELINUX    RUNASUSER          FSGROUP     SUPGROUP    READONLYROOTFS   VOLUMES
-eks.privileged   true    *      RunAsAny   RunAsAny           RunAsAny    RunAsAny    false            *
-</code></pre></div><p>EKS has a PSP named <code>eks.privileged</code> by default. This is a policy that allows all Pods to be run.
-<a href="https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/pod-security-policy.html">https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/pod-security-policy.html</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ kubectl get psp
+</span></span><span style="display:flex;"><span>NAME             PRIV    CAPS   SELINUX    RUNASUSER          FSGROUP     SUPGROUP    READONLYROOTFS   VOLUMES
+</span></span><span style="display:flex;"><span>eks.privileged   true    *      RunAsAny   RunAsAny           RunAsAny    RunAsAny    false            *
+</span></span></code></pre></div><p>EKS has a PSP named <code>eks.privileged</code> by default. This is a policy that allows all Pods to be run.
+<a href="https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/pod-security-policy.html" target="_blank">https://docs.aws.amazon.com/ja_jp/eks/latest/userguide/pod-security-policy.html</a></p>
 <p>Next, check the scope the policy effects.</p>
 <p>Run the <code>psp-util tree</code> command. You will see that the PSP is applied to <code>system:authenticated</code> Group.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl psp-util tree
-📙 PSP eks.privileged
-└── 📕 ClusterRole eks:podsecuritypolicy:privileged
-    └── 📘 ClusterRoleBinding eks:podsecuritypolicy:authenticated
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:authenticated, Namespace:<span style="color:#f92672">}</span>
-</code></pre></div><p><code>system:authenticated</code> Group is the group that all access authenticated by API Server belongs. It means anyone in the cluster is covered by this policy.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ kubectl psp-util tree
+</span></span><span style="display:flex;"><span>📙 PSP eks.privileged
+</span></span><span style="display:flex;"><span>└── 📕 ClusterRole eks:podsecuritypolicy:privileged
+</span></span><span style="display:flex;"><span>    └── 📘 ClusterRoleBinding eks:podsecuritypolicy:authenticated
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:authenticated, Namespace:<span style="color:#f92672">}</span>
+</span></span></code></pre></div><p><code>system:authenticated</code> Group is the group that all access authenticated by API Server belongs. It means anyone in the cluster is covered by this policy.</p>
 <h4 id="3-create-psp"><strong>3. Create PSP</strong></h4>
 <p><strong>3-1. Create a privileged PSP</strong></p>
 <p>As mentioned above, EKS have a privileged PSP by default.</p>
 <p>Here is all permitted PSP configuration in EKS:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml:psp-privileged.yaml" data-lang="yaml:psp-privileged.yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">policy/v1beta1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PodSecurityPolicy</span>
-<span style="color:#f92672">metadata</span>:
-  <span style="color:#f92672">annotations</span>:
-    <span style="color:#f92672">kubernetes.io/description</span>: <span style="color:#ae81ff">privileged allows full unrestricted access to pod features,</span>
-      <span style="color:#ae81ff">as if the PodSecurityPolicy controller was not enabled.</span>
-    <span style="color:#f92672">seccomp.security.alpha.kubernetes.io/allowedProfileNames</span>: <span style="color:#e6db74">&#39;*&#39;</span>
-  <span style="color:#f92672">labels</span>:
-    <span style="color:#f92672">eks.amazonaws.com/component</span>: <span style="color:#ae81ff">pod-security-policy</span>
-    <span style="color:#f92672">kubernetes.io/cluster-service</span>: <span style="color:#e6db74">&#34;true&#34;</span>
-  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">eks.privileged</span>
-<span style="color:#f92672">spec</span>:
-  <span style="color:#f92672">allowPrivilegeEscalation</span>: <span style="color:#66d9ef">true</span>
-  <span style="color:#f92672">allowedCapabilities</span>:
-  - <span style="color:#e6db74">&#39;*&#39;</span>
-  <span style="color:#f92672">fsGroup</span>:
-    <span style="color:#f92672">rule</span>: <span style="color:#ae81ff">RunAsAny</span>
-  <span style="color:#f92672">hostIPC</span>: <span style="color:#66d9ef">true</span>
-  <span style="color:#f92672">hostNetwork</span>: <span style="color:#66d9ef">true</span>
-  <span style="color:#f92672">hostPID</span>: <span style="color:#66d9ef">true</span>
-  <span style="color:#f92672">hostPorts</span>:
-  - <span style="color:#f92672">max</span>: <span style="color:#ae81ff">65535</span>
-    <span style="color:#f92672">min</span>: <span style="color:#ae81ff">0</span>
-  <span style="color:#f92672">privileged</span>: <span style="color:#66d9ef">true</span>
-  <span style="color:#f92672">runAsUser</span>:
-    <span style="color:#f92672">rule</span>: <span style="color:#ae81ff">RunAsAny</span>
-  <span style="color:#f92672">seLinux</span>:
-    <span style="color:#f92672">rule</span>: <span style="color:#ae81ff">RunAsAny</span>
-  <span style="color:#f92672">supplementalGroups</span>:
-    <span style="color:#f92672">rule</span>: <span style="color:#ae81ff">RunAsAny</span>
-  <span style="color:#f92672">volumes</span>:
-  - <span style="color:#e6db74">&#39;*&#39;</span>
-</code></pre></div><p>If a privileged PSP does not exist in your cluster, create and apply the above configuration file.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl apply -f psp-privileged.yaml
-</code></pre></div><p>It&rsquo;s also ok to create another PSP that suits your environment if you want a more restricted PSP for the privileged namespace and pods.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml:psp-privileged.yaml" data-lang="yaml:psp-privileged.yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">policy/v1beta1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PodSecurityPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">annotations</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">kubernetes.io/description</span>: <span style="color:#ae81ff">privileged allows full unrestricted access to pod features,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">as if the PodSecurityPolicy controller was not enabled.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">seccomp.security.alpha.kubernetes.io/allowedProfileNames</span>: <span style="color:#e6db74">&#39;*&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">eks.amazonaws.com/component</span>: <span style="color:#ae81ff">pod-security-policy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">kubernetes.io/cluster-service</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">eks.privileged</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">allowPrivilegeEscalation</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">allowedCapabilities</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#39;*&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">fsGroup</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rule</span>: <span style="color:#ae81ff">RunAsAny</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hostIPC</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hostNetwork</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hostPID</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">hostPorts</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">max</span>: <span style="color:#ae81ff">65535</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">min</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">privileged</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">runAsUser</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rule</span>: <span style="color:#ae81ff">RunAsAny</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">seLinux</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rule</span>: <span style="color:#ae81ff">RunAsAny</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">supplementalGroups</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">rule</span>: <span style="color:#ae81ff">RunAsAny</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#e6db74">&#39;*&#39;</span>
+</span></span></code></pre></div><p>If a privileged PSP does not exist in your cluster, create and apply the above configuration file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl apply -f psp-privileged.yaml
+</span></span></code></pre></div><p>It&rsquo;s also ok to create another PSP that suits your environment if you want a more restricted PSP for the privileged namespace and pods.</p>
 <p><strong>3-2. Create a restricted PSP</strong></p>
 <p>As a restricted PSP, it&rsquo;s the best to create the PSP in the <a href="https://aws.github.io/aws-eks-best-practices/pods/#recommendations" target="_blank">EKS Best Practices Recommendations</a> published by AWS.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml:psp-restricted.yaml" data-lang="yaml:psp-restricted.yaml"><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">policy/v1beta1</span>
-<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PodSecurityPolicy</span>
-<span style="color:#f92672">metadata</span>:
-    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">restricted</span>
-    <span style="color:#f92672">annotations</span>:
-        <span style="color:#f92672">seccomp.security.alpha.kubernetes.io/allowedProfileNames</span>: <span style="color:#e6db74">&#39;docker/default,runtime/default&#39;</span> <span style="color:#75715e"># Remove if seccomp is not enabled</span>
-        <span style="color:#f92672">apparmor.security.beta.kubernetes.io/allowedProfileNames</span>: <span style="color:#e6db74">&#39;runtime/default&#39;</span> <span style="color:#75715e"># Remove if apparmor is not enabled</span>
-        <span style="color:#f92672">seccomp.security.alpha.kubernetes.io/defaultProfileName</span>:  <span style="color:#e6db74">&#39;runtime/default&#39;</span> <span style="color:#75715e"># Remove if seccomp is not enabled</span>
-        <span style="color:#f92672">apparmor.security.beta.kubernetes.io/defaultProfileName</span>:  <span style="color:#e6db74">&#39;runtime/default&#39;</span> <span style="color:#75715e"># Remove if apparmor is not enabled</span>
-<span style="color:#f92672">spec</span>:
-    <span style="color:#f92672">privileged</span>: <span style="color:#66d9ef">false</span>
-    <span style="color:#75715e"># Required to prevent escalations to root.</span>
-    <span style="color:#f92672">allowPrivilegeEscalation</span>: <span style="color:#66d9ef">false</span>
-    <span style="color:#75715e"># This is redundant with non-root + disallow privilege escalation,</span>
-    <span style="color:#75715e"># but we can provide it for defense in depth.</span>
-    <span style="color:#f92672">requiredDropCapabilities</span>:
-    - <span style="color:#ae81ff">ALL</span>
-    <span style="color:#75715e"># Allow core volume types.</span>
-    <span style="color:#f92672">volumes</span>:
-    - <span style="color:#e6db74">&#39;configMap&#39;</span>
-    - <span style="color:#e6db74">&#39;emptyDir&#39;</span>
-    - <span style="color:#e6db74">&#39;projected&#39;</span>
-    - <span style="color:#e6db74">&#39;secret&#39;</span>
-    - <span style="color:#e6db74">&#39;downwardAPI&#39;</span>
-    <span style="color:#75715e"># Assume that persistentVolumes set up by the cluster admin are safe to use.</span>
-    - <span style="color:#e6db74">&#39;persistentVolumeClaim&#39;</span>
-    <span style="color:#f92672">hostNetwork</span>: <span style="color:#66d9ef">false</span>
-    <span style="color:#f92672">hostIPC</span>: <span style="color:#66d9ef">false</span>
-    <span style="color:#f92672">hostPID</span>: <span style="color:#66d9ef">false</span>
-    <span style="color:#f92672">runAsUser</span>:
-        <span style="color:#75715e"># Require the container to run without root privileges.</span>
-        <span style="color:#f92672">rule</span>: <span style="color:#e6db74">&#39;MustRunAsNonRoot&#39;</span>
-    <span style="color:#f92672">seLinux</span>:
-        <span style="color:#75715e"># This policy assumes the nodes are using AppArmor rather than SELinux.</span>
-        <span style="color:#f92672">rule</span>: <span style="color:#e6db74">&#39;RunAsAny&#39;</span>
-    <span style="color:#f92672">supplementalGroups</span>:
-        <span style="color:#f92672">rule</span>: <span style="color:#e6db74">&#39;MustRunAs&#39;</span>
-        <span style="color:#f92672">ranges</span>:
-        <span style="color:#75715e"># Forbid adding the root group.</span>
-        - <span style="color:#f92672">min</span>: <span style="color:#ae81ff">1</span>
-          <span style="color:#f92672">max</span>: <span style="color:#ae81ff">65535</span>
-    <span style="color:#f92672">fsGroup</span>:
-        <span style="color:#f92672">rule</span>: <span style="color:#e6db74">&#39;MustRunAs&#39;</span>
-        <span style="color:#f92672">ranges</span>:
-        <span style="color:#75715e"># Forbid adding the root group.</span>
-        - <span style="color:#f92672">min</span>: <span style="color:#ae81ff">1</span>
-          <span style="color:#f92672">max</span>: <span style="color:#ae81ff">65535</span>
-    <span style="color:#f92672">readOnlyRootFilesystem</span>: <span style="color:#66d9ef">false</span>
-</code></pre></div><p>Create an above configuration file and apply it.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl apply -f psp-restricted.yaml
-</code></pre></div><p>If your application is already running in a cluster and you want to define a restriction policy within the limits of the current running app, you can use <a href="https://github.com/sysdiglabs/kube-psp-advisor" target="_blank">kube-psp-advisor</a> maintained by Sysdig. It automatically generates the appropriate PSP.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml:psp-restricted.yaml" data-lang="yaml:psp-restricted.yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">policy/v1beta1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PodSecurityPolicy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">restricted</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">annotations</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">seccomp.security.alpha.kubernetes.io/allowedProfileNames</span>: <span style="color:#e6db74">&#39;docker/default,runtime/default&#39;</span> <span style="color:#75715e"># Remove if seccomp is not enabled</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">apparmor.security.beta.kubernetes.io/allowedProfileNames</span>: <span style="color:#e6db74">&#39;runtime/default&#39;</span> <span style="color:#75715e"># Remove if apparmor is not enabled</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">seccomp.security.alpha.kubernetes.io/defaultProfileName</span>:  <span style="color:#e6db74">&#39;runtime/default&#39;</span> <span style="color:#75715e"># Remove if seccomp is not enabled</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">apparmor.security.beta.kubernetes.io/defaultProfileName</span>:  <span style="color:#e6db74">&#39;runtime/default&#39;</span> <span style="color:#75715e"># Remove if apparmor is not enabled</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">privileged</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Required to prevent escalations to root.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">allowPrivilegeEscalation</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># This is redundant with non-root + disallow privilege escalation,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># but we can provide it for defense in depth.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requiredDropCapabilities</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">ALL</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Allow core volume types.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#39;configMap&#39;</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#39;emptyDir&#39;</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#39;projected&#39;</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#39;secret&#39;</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#39;downwardAPI&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Assume that persistentVolumes set up by the cluster admin are safe to use.</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#39;persistentVolumeClaim&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">hostNetwork</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">hostIPC</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">hostPID</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">runAsUser</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Require the container to run without root privileges.</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">rule</span>: <span style="color:#e6db74">&#39;MustRunAsNonRoot&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">seLinux</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># This policy assumes the nodes are using AppArmor rather than SELinux.</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">rule</span>: <span style="color:#e6db74">&#39;RunAsAny&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">supplementalGroups</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">rule</span>: <span style="color:#e6db74">&#39;MustRunAs&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ranges</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Forbid adding the root group.</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">min</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">max</span>: <span style="color:#ae81ff">65535</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">fsGroup</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">rule</span>: <span style="color:#e6db74">&#39;MustRunAs&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ranges</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># Forbid adding the root group.</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">min</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">max</span>: <span style="color:#ae81ff">65535</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">readOnlyRootFilesystem</span>: <span style="color:#66d9ef">false</span>
+</span></span></code></pre></div><p>Create an above configuration file and apply it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl apply -f psp-restricted.yaml
+</span></span></code></pre></div><p>If your application is already running in a cluster and you want to define a restriction policy within the limits of the current running app, you can use <a href="https://github.com/sysdiglabs/kube-psp-advisor" target="_blank">kube-psp-advisor</a> maintained by Sysdig. It automatically generates the appropriate PSP.</p>
 <p>It is also available on Krew.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl krew install advise-psp
-</code></pre></div><p>The <code>inspect</code> command automatically generates PSP by given Namespace where the target application is currently running.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl krew install advise-psp
+</span></span></code></pre></div><p>The <code>inspect</code> command automatically generates PSP by given Namespace where the target application is currently running.
 The following command creates PSP generated by the inspect result.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl advise-psp inspect --namespace<span style="color:#f92672">=</span>YOUR_NAMESPACE | kubectl apply -f -
-</code></pre></div><h4 id="4-apply-psps"><strong>4. Apply PSPs</strong></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl advise-psp inspect --namespace<span style="color:#f92672">=</span>YOUR_NAMESPACE | kubectl apply -f -
+</span></span></code></pre></div><h4 id="4-apply-psps"><strong>4. Apply PSPs</strong></h4>
 <p>Now that we have created a privileged PSP and a restricted PSP.</p>
 <p>(In the case of EKS)
 Detach a privileged PSP from <code>system:authenticated</code> Group.</p>
 <p>psp-util automatically creates ClusterRoleBinding, so just remove the ClusterRoleBinding named <code>eks:podsecuritypolicy:authenticated</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl delete ClusterRoleBinding eks:podsecuritypolicy:authenticated
-</code></pre></div><h4 id="4-1-apply-the-restricted-psp"><strong>4-1. Apply the restricted PSP</strong></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl delete ClusterRoleBinding eks:podsecuritypolicy:authenticated
+</span></span></code></pre></div><h4 id="4-1-apply-the-restricted-psp"><strong>4-1. Apply the restricted PSP</strong></h4>
 <p>To apply the restricted PSP to whole cluster, attach the PSP to <code>system:authenticated</code> Group.</p>
 <p>Assuming that you have created a restricted PSP named <code>restricted</code>, Run the following command</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach restricted --group system:authenticated
-</code></pre></div><p>See the current situation. ClusterRole and ClusterRoleBinding are automatically created.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl psp-util tree
-📙 PSP eks.privileged
-└── 📕 ClusterRole eks:podsecuritypolicy:privileged
-
-📙 PSP restricted
-└── 📕 ClusterRole psp-util.restricted
-    └── 📘 ClusterRoleBinding psp-util.restricted
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:authenticated, Namespace:<span style="color:#f92672">}</span>
-</code></pre></div><h4 id="4-2-apply-the-privileged-psp"><strong>4-2. Apply the privileged PSP</strong></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl psp-util attach restricted --group system:authenticated
+</span></span></code></pre></div><p>See the current situation. ClusterRole and ClusterRoleBinding are automatically created.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ kubectl psp-util tree
+</span></span><span style="display:flex;"><span>📙 PSP eks.privileged
+</span></span><span style="display:flex;"><span>└── 📕 ClusterRole eks:podsecuritypolicy:privileged
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>📙 PSP restricted
+</span></span><span style="display:flex;"><span>└── 📕 ClusterRole psp-util.restricted
+</span></span><span style="display:flex;"><span>    └── 📘 ClusterRoleBinding psp-util.restricted
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:authenticated, Namespace:<span style="color:#f92672">}</span>
+</span></span></code></pre></div><h4 id="4-2-apply-the-privileged-psp"><strong>4-2. Apply the privileged PSP</strong></h4>
 <p><strong>4-2-1. For Administrative Group</strong></p>
 <p>Attach the privileged PSP to <code>system:master</code> Group, an administrative group.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach eks.privileged --group system:master
-</code></pre></div><p>For eks, attach the privileged PSP to <code>eks</code> Group.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach eks.privileged --group eks
-</code></pre></div><p><strong>4-2-1. For ServiceAccounts in privileged Namespace</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl psp-util attach eks.privileged --group system:master
+</span></span></code></pre></div><p>For eks, attach the privileged PSP to <code>eks</code> Group.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl psp-util attach eks.privileged --group eks
+</span></span></code></pre></div><p><strong>4-2-1. For ServiceAccounts in privileged Namespace</strong></p>
 <p>Attach the privileged PSP to ServiceAccounts in the privileged Namespace.</p>
 <p>For example treat <code>default</code> namespace as a privileged Namespace.</p>
 <p>Run the following command.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">kubectl psp-util attach eks.privileged --group system:serviceaccounts:default
-</code></pre></div><p>If you want to apply the privileged PSP to ServiceAccounts in other Namespace, change the above commands and execute it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl psp-util attach eks.privileged --group system:serviceaccounts:default
+</span></span></code></pre></div><p>If you want to apply the privileged PSP to ServiceAccounts in other Namespace, change the above commands and execute it.</p>
 <p><strong>4-2-2. For ServiceAccounts in kube-system Namespace</strong></p>
 <p>You need to be careful for attaching the privileged PSP to <code>kube-system</code>.
 There are system controller&rsquo;s ServiceAccounts such as <code>replicaset-controller</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl get sa -n kube-system
-NAME                                 SECRETS   AGE
-alb-ingress-controller               <span style="color:#ae81ff">1</span>         277d
-attachdetach-controller              <span style="color:#ae81ff">1</span>         380d
-aws-cloud-provider                   <span style="color:#ae81ff">1</span>         380d
-aws-node                             <span style="color:#ae81ff">1</span>         380d
-certificate-controller               <span style="color:#ae81ff">1</span>         380d
-clusterrole-aggregation-controller   <span style="color:#ae81ff">1</span>         380d
-coredns                              <span style="color:#ae81ff">1</span>         380d
-cronjob-controller                   <span style="color:#ae81ff">1</span>         380d
-daemon-set-controller                <span style="color:#ae81ff">1</span>         380d
-default                              <span style="color:#ae81ff">1</span>         380d
-deployment-controller                <span style="color:#ae81ff">1</span>         380d
-disruption-controller                <span style="color:#ae81ff">1</span>         380d
-eks-vpc-resource-controller          <span style="color:#ae81ff">1</span>         12d
-endpoint-controller                  <span style="color:#ae81ff">1</span>         380d
-expand-controller                    <span style="color:#ae81ff">1</span>         380d
-generic-garbage-collector            <span style="color:#ae81ff">1</span>         380d
-horizontal-pod-autoscaler            <span style="color:#ae81ff">1</span>         380d
-job-controller                       <span style="color:#ae81ff">1</span>         380d
-kube-proxy                           <span style="color:#ae81ff">1</span>         380d
-kubernetes-route53-sync              <span style="color:#ae81ff">1</span>         87d
-namespace-controller                 <span style="color:#ae81ff">1</span>         380d
-node-controller                      <span style="color:#ae81ff">1</span>         380d
-node-problem-detector                <span style="color:#ae81ff">1</span>         177d
-persistent-volume-binder             <span style="color:#ae81ff">1</span>         380d
-pod-garbage-collector                <span style="color:#ae81ff">1</span>         380d
-pv-protection-controller             <span style="color:#ae81ff">1</span>         380d
-pvc-protection-controller            <span style="color:#ae81ff">1</span>         380d
-replicaset-controller                <span style="color:#ae81ff">1</span>         380d
-replication-controller               <span style="color:#ae81ff">1</span>         380d
-resourcequota-controller             <span style="color:#ae81ff">1</span>         380d
-service-account-controller           <span style="color:#ae81ff">1</span>         380d
-service-controller                   <span style="color:#ae81ff">1</span>         380d
-statefulset-controller               <span style="color:#ae81ff">1</span>         380d
-ttl-controller                       <span style="color:#ae81ff">1</span>         380d
-vpc-resource-controller              <span style="color:#ae81ff">1</span>         12d
-</code></pre></div><p>If you attach the privilleged PSP to <code>replicaset-controller</code>, all of the Pods created from Deployments use the privileged PSP.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ kubectl get sa -n kube-system
+</span></span><span style="display:flex;"><span>NAME                                 SECRETS   AGE
+</span></span><span style="display:flex;"><span>alb-ingress-controller               <span style="color:#ae81ff">1</span>         277d
+</span></span><span style="display:flex;"><span>attachdetach-controller              <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>aws-cloud-provider                   <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>aws-node                             <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>certificate-controller               <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>clusterrole-aggregation-controller   <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>coredns                              <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>cronjob-controller                   <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>daemon-set-controller                <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>default                              <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>deployment-controller                <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>disruption-controller                <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>eks-vpc-resource-controller          <span style="color:#ae81ff">1</span>         12d
+</span></span><span style="display:flex;"><span>endpoint-controller                  <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>expand-controller                    <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>generic-garbage-collector            <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>horizontal-pod-autoscaler            <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>job-controller                       <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>kube-proxy                           <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>kubernetes-route53-sync              <span style="color:#ae81ff">1</span>         87d
+</span></span><span style="display:flex;"><span>namespace-controller                 <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>node-controller                      <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>node-problem-detector                <span style="color:#ae81ff">1</span>         177d
+</span></span><span style="display:flex;"><span>persistent-volume-binder             <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>pod-garbage-collector                <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>pv-protection-controller             <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>pvc-protection-controller            <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>replicaset-controller                <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>replication-controller               <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>resourcequota-controller             <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>service-account-controller           <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>service-controller                   <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>statefulset-controller               <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>ttl-controller                       <span style="color:#ae81ff">1</span>         380d
+</span></span><span style="display:flex;"><span>vpc-resource-controller              <span style="color:#ae81ff">1</span>         12d
+</span></span></code></pre></div><p>If you attach the privilleged PSP to <code>replicaset-controller</code>, all of the Pods created from Deployments use the privileged PSP.
 It is invalid configuration and therefore you must attach the privileged PSP to each ServiceAccounts.</p>
 <p>For example, if there are only Pods created by DaemonSets and Deployments in the cluster, you can see the ServiceAccounts by following commands.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># SerivceAccounts used by DaemonSets</span>
-$ kubectl -n kube-system get ds -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span>
-aws-node kube-proxy
-
-<span style="color:#75715e"># SerivceAccounts used by Deployments</span>
-$ kubectl -n kube-system get deploy -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span>
-alb-ingress-controller coredns
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Attaching by one line</span>
-<span style="color:#75715e"># DaemonSet&#39;s ServiceAccounts</span>
-<span style="color:#66d9ef">for</span> i in <span style="color:#66d9ef">$(</span>kubectl -n kube-system get ds -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span><span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> kubectl psp-util attach eks.privileged --sa $i -n kube-system; <span style="color:#66d9ef">done</span>
-
-<span style="color:#75715e"># Deployment&#39;s ServiceAccounts</span>
-<span style="color:#66d9ef">for</span> i in <span style="color:#66d9ef">$(</span>kubectl -n kube-system get deploy -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span><span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> kubectl psp-util attach eks.privileged --sa $i -n kube-system; <span style="color:#66d9ef">done</span>
-</code></pre></div><h4 id="5-finished"><strong>5. Finished</strong></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># SerivceAccounts used by DaemonSets</span>
+</span></span><span style="display:flex;"><span>$ kubectl -n kube-system get ds -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span>
+</span></span><span style="display:flex;"><span>aws-node kube-proxy
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># SerivceAccounts used by Deployments</span>
+</span></span><span style="display:flex;"><span>$ kubectl -n kube-system get deploy -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span>
+</span></span><span style="display:flex;"><span>alb-ingress-controller coredns
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># Attaching by one line</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># DaemonSet&#39;s ServiceAccounts</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i in <span style="color:#66d9ef">$(</span>kubectl -n kube-system get ds -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span><span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> kubectl psp-util attach eks.privileged --sa $i -n kube-system; <span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Deployment&#39;s ServiceAccounts</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i in <span style="color:#66d9ef">$(</span>kubectl -n kube-system get deploy -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.items[*].spec.template.spec.serviceAccountName}&#39;</span><span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span> kubectl psp-util attach eks.privileged --sa $i -n kube-system; <span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><h4 id="5-finished"><strong>5. Finished</strong></h4>
 <p>That&rsquo;s all. Here is the result of the configuration so far.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl psp-util tree      
-📙 PSP eks.privileged
-└── 📕 ClusterRole eks:podsecuritypolicy:privileged
-└── 📕 ClusterRole psp-util.eks.privileged
-    └── 📘 ClusterRoleBinding psp-util.eks.privileged
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: eks, Namespace: <span style="color:#f92672">}</span>
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:master, Namespace: <span style="color:#f92672">}</span>
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: aws-node, Namespace: kube-system<span style="color:#f92672">}</span>
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: kube-proxy, Namespace: kube-system<span style="color:#f92672">}</span>
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: alb-ingress-controller, Namespace: kube-system<span style="color:#f92672">}</span>
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: coredns, Namespace: kube-system<span style="color:#f92672">}</span>
-📙 PSP restricted
-└── 📕 ClusterRole psp-util.restricted
-    └── 📘 ClusterRoleBinding psp-util.restricted
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:authenticated, Namespace: <span style="color:#f92672">}</span>
-        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:unauthenticated, Namespace: <span style="color:#f92672">}</span>
-</code></pre></div><p>If you want another PSP between privileged and restricted PSPs, you should create a dedicated PSP and apply it in the same way as you apply the privileged PSP.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ kubectl psp-util tree      
+</span></span><span style="display:flex;"><span>📙 PSP eks.privileged
+</span></span><span style="display:flex;"><span>└── 📕 ClusterRole eks:podsecuritypolicy:privileged
+</span></span><span style="display:flex;"><span>└── 📕 ClusterRole psp-util.eks.privileged
+</span></span><span style="display:flex;"><span>    └── 📘 ClusterRoleBinding psp-util.eks.privileged
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: eks, Namespace: <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:master, Namespace: <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: aws-node, Namespace: kube-system<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: kube-proxy, Namespace: kube-system<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: alb-ingress-controller, Namespace: kube-system<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: ServiceAccount, Name: coredns, Namespace: kube-system<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>📙 PSP restricted
+</span></span><span style="display:flex;"><span>└── 📕 ClusterRole psp-util.restricted
+</span></span><span style="display:flex;"><span>    └── 📘 ClusterRoleBinding psp-util.restricted
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:authenticated, Namespace: <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        └── 📗 Subject<span style="color:#f92672">{</span>Kind: Group, Name: system:unauthenticated, Namespace: <span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>If you want another PSP between privileged and restricted PSPs, you should create a dedicated PSP and apply it in the same way as you apply the privileged PSP.</p>
 <p>However the privileged PSP has a first priority. So verify and apply it carefully.</p>
 <p>Have a good k8s experience 👍</p>
 
@@ -413,7 +414,7 @@ alb-ingress-controller coredns
 </div>
 </main>
 <footer>
-© 2021 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae">Vitae</a> theme for <a href="https://gohugo.io">Hugo</a>
+© 2021 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae" target="_blank">Vitae</a> theme for <a href="https://gohugo.io" target="_blank">Hugo</a>
 </footer><script src="/js/dark-mode.js"></script>
 
 </body>

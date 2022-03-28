@@ -29,7 +29,7 @@
   </script>
 
 
-  <meta name="generator" content="Hugo 0.75.1" />
+  <meta name="generator" content="Hugo 0.96.0" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,17 +37,18 @@
 <meta property="og:description" content="いつもコマンドを忘れるのでまとめる。
 プライマリキー生成 ed25519でキーを生成には--expertオプションが必要。
 プライマリキーは無期限にし、オフラインで管理する。
-$ gpg --expert --full-gen-key gpg (GnuPG) 2.2.20; Copyright (C) 2020 Free Software Foundation, Inc. This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law. Please select what kind of key you want: (1) RSA and RSA (default) (2) DSA and Elgamal (3) DSA (sign only) (4) RSA (sign only) (7) DSA (set your own capabilities) (8) RSA (set your own capabilities) (9) ECC and ECC (10) ECC (sign only) (11) ECC (set your own capabilities) &lt;--- HERE (13) Existing key (14) Existing key from card Your selection?" />
+$ gpg --expert --full-gen-key  gpg (GnuPG) 2.2.20; Copyright (C) 2020 Free Software Foundation, Inc. This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.  Please select what kind of key you want:  (1) RSA and RSA (default)  (2) DSA and Elgamal  (3) DSA (sign only)  (4) RSA (sign only)  (7) DSA (set your own capabilities)  (8) RSA (set your own capabilities)  (9) ECC and ECC  (10) ECC (sign only)  (11) ECC (set your own capabilities) &lt;--- HERE  (13) Existing key  (14) Existing key from card Your selection?" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://blog.jlandowner.dev/posts/gpg/" />
+<meta property="og:url" content="https://blog.jlandowner.dev/posts/gpg/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-02-11T14:00:00+09:00" />
 <meta property="article:modified_time" content="2022-02-11T14:00:00+09:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="GPGキー関連のコマンド"/>
 <meta name="twitter:description" content="いつもコマンドを忘れるのでまとめる。
 プライマリキー生成 ed25519でキーを生成には--expertオプションが必要。
 プライマリキーは無期限にし、オフラインで管理する。
-$ gpg --expert --full-gen-key gpg (GnuPG) 2.2.20; Copyright (C) 2020 Free Software Foundation, Inc. This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law. Please select what kind of key you want: (1) RSA and RSA (default) (2) DSA and Elgamal (3) DSA (sign only) (4) RSA (sign only) (7) DSA (set your own capabilities) (8) RSA (set your own capabilities) (9) ECC and ECC (10) ECC (sign only) (11) ECC (set your own capabilities) &lt;--- HERE (13) Existing key (14) Existing key from card Your selection?"/>
+$ gpg --expert --full-gen-key  gpg (GnuPG) 2.2.20; Copyright (C) 2020 Free Software Foundation, Inc. This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.  Please select what kind of key you want:  (1) RSA and RSA (default)  (2) DSA and Elgamal  (3) DSA (sign only)  (4) RSA (sign only)  (7) DSA (set your own capabilities)  (8) RSA (set your own capabilities)  (9) ECC and ECC  (10) ECC (sign only)  (11) ECC (set your own capabilities) &lt;--- HERE  (13) Existing key  (14) Existing key from card Your selection?"/>
 
   <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/normalize.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/main.css" />
@@ -113,90 +114,90 @@ $ gpg --expert --full-gen-key gpg (GnuPG) 2.2.20; Copyright (C) 2020 Free Softwa
 <h2 id="プライマリキー生成">プライマリキー生成</h2>
 <p>ed25519でキーを生成には<code>--expert</code>オプションが必要。</p>
 <p>プライマリキーは無期限にし、オフラインで管理する。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gpg --expert --full-gen-key
-
-gpg <span style="color:#f92672">(</span>GnuPG<span style="color:#f92672">)</span> 2.2.20; Copyright <span style="color:#f92672">(</span>C<span style="color:#f92672">)</span> <span style="color:#ae81ff">2020</span> Free Software Foundation, Inc.
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-Please <span style="color:#66d9ef">select</span> what kind of key you want:
-   <span style="color:#f92672">(</span>1<span style="color:#f92672">)</span> RSA and RSA <span style="color:#f92672">(</span>default<span style="color:#f92672">)</span>
-   <span style="color:#f92672">(</span>2<span style="color:#f92672">)</span> DSA and Elgamal
-   <span style="color:#f92672">(</span>3<span style="color:#f92672">)</span> DSA <span style="color:#f92672">(</span>sign only<span style="color:#f92672">)</span>
-   <span style="color:#f92672">(</span>4<span style="color:#f92672">)</span> RSA <span style="color:#f92672">(</span>sign only<span style="color:#f92672">)</span>
-   <span style="color:#f92672">(</span>7<span style="color:#f92672">)</span> DSA <span style="color:#f92672">(</span>set your own capabilities<span style="color:#f92672">)</span>
-   <span style="color:#f92672">(</span>8<span style="color:#f92672">)</span> RSA <span style="color:#f92672">(</span>set your own capabilities<span style="color:#f92672">)</span>
-   <span style="color:#f92672">(</span>9<span style="color:#f92672">)</span> ECC and ECC
-  <span style="color:#f92672">(</span>10<span style="color:#f92672">)</span> ECC <span style="color:#f92672">(</span>sign only<span style="color:#f92672">)</span>
-  <span style="color:#f92672">(</span>11<span style="color:#f92672">)</span> ECC <span style="color:#f92672">(</span>set your own capabilities<span style="color:#f92672">)</span>  &lt;--- HERE
-  <span style="color:#f92672">(</span>13<span style="color:#f92672">)</span> Existing key
-  <span style="color:#f92672">(</span>14<span style="color:#f92672">)</span> Existing key from card
-Your selection? <span style="color:#ae81ff">11</span>
-
-Possible actions <span style="color:#66d9ef">for</span> a ECDSA/EdDSA key: Sign Certify Authenticate
-Current allowed actions: Sign Certify
-
-   <span style="color:#f92672">(</span>S<span style="color:#f92672">)</span> Toggle the sign capability
-   <span style="color:#f92672">(</span>A<span style="color:#f92672">)</span> Toggle the authenticate capability
-   <span style="color:#f92672">(</span>Q<span style="color:#f92672">)</span> Finished
-
-Your selection?
-Please <span style="color:#66d9ef">select</span> which elliptic curve you want:
-   <span style="color:#f92672">(</span>1<span style="color:#f92672">)</span> Curve <span style="color:#ae81ff">25519</span>   &lt;--- HERE
-   <span style="color:#f92672">(</span>3<span style="color:#f92672">)</span> NIST P-256
-   <span style="color:#f92672">(</span>4<span style="color:#f92672">)</span> NIST P-384
-   <span style="color:#f92672">(</span>5<span style="color:#f92672">)</span> NIST P-521
-   <span style="color:#f92672">(</span>6<span style="color:#f92672">)</span> Brainpool P-256
-   <span style="color:#f92672">(</span>7<span style="color:#f92672">)</span> Brainpool P-384
-   <span style="color:#f92672">(</span>8<span style="color:#f92672">)</span> Brainpool P-512
-   <span style="color:#f92672">(</span>9<span style="color:#f92672">)</span> secp256k1
-Your selection? <span style="color:#ae81ff">1</span>
-...
-</code></pre></div><p>シークレットキーIDを確認する</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gpg --list-secret-keys --keyid-format<span style="color:#f92672">=</span>long
-
------------------------------------
-pub   ed25519/&lt;GPG_KEY_ID_1&gt; 2021-10-24 <span style="color:#f92672">[</span>SC<span style="color:#f92672">]</span>
-      09A70C02424CE85007F433834902D487FA3A276F
-uid                 <span style="color:#f92672">[</span>  不明  <span style="color:#f92672">]</span> jlandowner ...
-sub   cv25519/&lt;GPG_SUBKEY_ID_1&gt; 2021-10-24 <span style="color:#f92672">[</span>E<span style="color:#f92672">]</span>
-</code></pre></div><p>サブキーを生成する</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gpg --export --edit-key &lt;GPG_KEY_ID_1&gt;
-
-gpg&gt; addkey
-</code></pre></div><p>プロンプトに従ってサブキーを作成する。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ gpg --expert --full-gen-key
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gpg <span style="color:#f92672">(</span>GnuPG<span style="color:#f92672">)</span> 2.2.20; Copyright <span style="color:#f92672">(</span>C<span style="color:#f92672">)</span> <span style="color:#ae81ff">2020</span> Free Software Foundation, Inc.
+</span></span><span style="display:flex;"><span>This is free software: you are free to change and redistribute it.
+</span></span><span style="display:flex;"><span>There is NO WARRANTY, to the extent permitted by law.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Please <span style="color:#66d9ef">select</span> what kind of key you want:
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>1<span style="color:#f92672">)</span> RSA and RSA <span style="color:#f92672">(</span>default<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>2<span style="color:#f92672">)</span> DSA and Elgamal
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>3<span style="color:#f92672">)</span> DSA <span style="color:#f92672">(</span>sign only<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>4<span style="color:#f92672">)</span> RSA <span style="color:#f92672">(</span>sign only<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>7<span style="color:#f92672">)</span> DSA <span style="color:#f92672">(</span>set your own capabilities<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>8<span style="color:#f92672">)</span> RSA <span style="color:#f92672">(</span>set your own capabilities<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>9<span style="color:#f92672">)</span> ECC and ECC
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">(</span>10<span style="color:#f92672">)</span> ECC <span style="color:#f92672">(</span>sign only<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">(</span>11<span style="color:#f92672">)</span> ECC <span style="color:#f92672">(</span>set your own capabilities<span style="color:#f92672">)</span>  &lt;--- HERE
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">(</span>13<span style="color:#f92672">)</span> Existing key
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">(</span>14<span style="color:#f92672">)</span> Existing key from card
+</span></span><span style="display:flex;"><span>Your selection? <span style="color:#ae81ff">11</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Possible actions <span style="color:#66d9ef">for</span> a ECDSA/EdDSA key: Sign Certify Authenticate
+</span></span><span style="display:flex;"><span>Current allowed actions: Sign Certify
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>S<span style="color:#f92672">)</span> Toggle the sign capability
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>A<span style="color:#f92672">)</span> Toggle the authenticate capability
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>Q<span style="color:#f92672">)</span> Finished
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Your selection?
+</span></span><span style="display:flex;"><span>Please <span style="color:#66d9ef">select</span> which elliptic curve you want:
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>1<span style="color:#f92672">)</span> Curve <span style="color:#ae81ff">25519</span>   &lt;--- HERE
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>3<span style="color:#f92672">)</span> NIST P-256
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>4<span style="color:#f92672">)</span> NIST P-384
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>5<span style="color:#f92672">)</span> NIST P-521
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>6<span style="color:#f92672">)</span> Brainpool P-256
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>7<span style="color:#f92672">)</span> Brainpool P-384
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>8<span style="color:#f92672">)</span> Brainpool P-512
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">(</span>9<span style="color:#f92672">)</span> secp256k1
+</span></span><span style="display:flex;"><span>Your selection? <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></div><p>シークレットキーIDを確認する</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ gpg --list-secret-keys --keyid-format<span style="color:#f92672">=</span>long
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-----------------------------------
+</span></span><span style="display:flex;"><span>pub   ed25519/&lt;GPG_KEY_ID_1&gt; 2021-10-24 <span style="color:#f92672">[</span>SC<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>      09A70C02424CE85007F433834902D487FA3A276F
+</span></span><span style="display:flex;"><span>uid                 <span style="color:#f92672">[</span>  不明  <span style="color:#f92672">]</span> jlandowner ...
+</span></span><span style="display:flex;"><span>sub   cv25519/&lt;GPG_SUBKEY_ID_1&gt; 2021-10-24 <span style="color:#f92672">[</span>E<span style="color:#f92672">]</span>
+</span></span></code></pre></div><p>サブキーを生成する</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ gpg --export --edit-key &lt;GPG_KEY_ID_1&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gpg&gt; addkey
+</span></span></code></pre></div><p>プロンプトに従ってサブキーを作成する。</p>
 <p>その後作成したサブキーを確認する</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gpg --list-secret-keys --keyid-format<span style="color:#f92672">=</span>long
-
------------------------------------
-pub   ed25519/&lt;GPG_KEY_ID_1&gt; 2021-10-24 <span style="color:#f92672">[</span>SC<span style="color:#f92672">]</span>
-      09A70C02424CE85007F433834902D487FA3A276F
-uid                 <span style="color:#f92672">[</span>  不明  <span style="color:#f92672">]</span> jlandowner ...
-sub   cv25519/&lt;GPG_SUBKEY_ID_1&gt; 2021-10-24 <span style="color:#f92672">[</span>E<span style="color:#f92672">]</span>
-sub   ed25519/&lt;GPG_SUBKEY_ID_2&gt; 2022-02-11 <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span> &lt;--- ADDED
-</code></pre></div><h2 id="gitのコミットに署名をつける">Gitのコミットに署名をつける</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ gpg --list-secret-keys --keyid-format<span style="color:#f92672">=</span>long
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-----------------------------------
+</span></span><span style="display:flex;"><span>pub   ed25519/&lt;GPG_KEY_ID_1&gt; 2021-10-24 <span style="color:#f92672">[</span>SC<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>      09A70C02424CE85007F433834902D487FA3A276F
+</span></span><span style="display:flex;"><span>uid                 <span style="color:#f92672">[</span>  不明  <span style="color:#f92672">]</span> jlandowner ...
+</span></span><span style="display:flex;"><span>sub   cv25519/&lt;GPG_SUBKEY_ID_1&gt; 2021-10-24 <span style="color:#f92672">[</span>E<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>sub   ed25519/&lt;GPG_SUBKEY_ID_2&gt; 2022-02-11 <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span> &lt;--- ADDED
+</span></span></code></pre></div><h2 id="gitのコミットに署名をつける">Gitのコミットに署名をつける</h2>
 <p>gitに設定する</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># コミット時にサインする設定</span>
-git config --global commit.gpgsign true
-
-<span style="color:#75715e"># シークレットキーIDの設定</span>
-git config --global user.signingkey &lt;GPG_SUBKEY_ID_2&gt;
-
-<span style="color:#75715e"># 環境変数設定</span>
-export GPG_TTY<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>tty<span style="color:#66d9ef">)</span>
-
-<span style="color:#75715e"># bashに環境変数設定を入れておく</span>
-<span style="color:#f92672">[[</span> -r ~/.bash_profile <span style="color:#f92672">]]</span> <span style="color:#f92672">&amp;&amp;</span> echo <span style="color:#e6db74">&#39;export GPG_TTY=$(tty)&#39;</span> &gt;&gt; ~/.bash_profile <span style="color:#f92672">||</span> echo <span style="color:#e6db74">&#39;export GPG_TTY=$(tty)&#39;</span> &gt;&gt; ~/.profile
-
-<span style="color:#75715e"># zshの場合はこっち</span>
-<span style="color:#f92672">[[</span> -r ~/.zshrc <span style="color:#f92672">]]</span> <span style="color:#f92672">&amp;&amp;</span> echo <span style="color:#e6db74">&#39;export GPG_TTY=$(tty)&#39;</span> &gt;&gt; ~/.zshrc <span style="color:#f92672">||</span> echo <span style="color:#e6db74">&#39;export GPG_TTY=$(tty)&#39;</span> &gt;&gt; ~/.zprofile
-</code></pre></div><h1 id="githubに公開鍵を設定する">Githubに公開鍵を設定する</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># コミット時にサインする設定</span>
+</span></span><span style="display:flex;"><span>git config --global commit.gpgsign true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># シークレットキーIDの設定</span>
+</span></span><span style="display:flex;"><span>git config --global user.signingkey &lt;GPG_SUBKEY_ID_2&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 環境変数設定</span>
+</span></span><span style="display:flex;"><span>export GPG_TTY<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>tty<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># bashに環境変数設定を入れておく</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[[</span> -r ~/.bash_profile <span style="color:#f92672">]]</span> <span style="color:#f92672">&amp;&amp;</span> echo <span style="color:#e6db74">&#39;export GPG_TTY=$(tty)&#39;</span> &gt;&gt; ~/.bash_profile <span style="color:#f92672">||</span> echo <span style="color:#e6db74">&#39;export GPG_TTY=$(tty)&#39;</span> &gt;&gt; ~/.profile
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># zshの場合はこっち</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[[</span> -r ~/.zshrc <span style="color:#f92672">]]</span> <span style="color:#f92672">&amp;&amp;</span> echo <span style="color:#e6db74">&#39;export GPG_TTY=$(tty)&#39;</span> &gt;&gt; ~/.zshrc <span style="color:#f92672">||</span> echo <span style="color:#e6db74">&#39;export GPG_TTY=$(tty)&#39;</span> &gt;&gt; ~/.zprofile
+</span></span></code></pre></div><h1 id="githubに公開鍵を設定する">Githubに公開鍵を設定する</h1>
 <p>ASCII armor 形式で GPG キーを出力する</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">gpg --armor --export &lt;GPG_KEY_ID&gt;
-</code></pre></div><p>出力されたキー情報をGithubアカウントに設定する。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>gpg --armor --export &lt;GPG_KEY_ID&gt;
+</span></span></code></pre></div><p>出力されたキー情報をGithubアカウントに設定する。</p>
 <h2 id="macのgpg-tool">MacのGPG Tool</h2>
 <p>Macではデフォルトでgpgtoolがインストールされていないので、AppleのサポートページにあるようにGPGTOOLをインストールする。</p>
-<p><a href="https://support.apple.com/ja-jp/HT201214">https://support.apple.com/ja-jp/HT201214</a></p>
+<p><a href="https://support.apple.com/ja-jp/HT201214" target="_blank">https://support.apple.com/ja-jp/HT201214</a></p>
 
 </div>
 <div class="tags">
@@ -217,7 +218,7 @@ export GPG_TTY<span style="color:#f92672">=</span><span style="color:#66d9ef">$(
 </div>
 </main>
 <footer>
-© 2021 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae">Vitae</a> theme for <a href="https://gohugo.io">Hugo</a>
+© 2021 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae" target="_blank">Vitae</a> theme for <a href="https://gohugo.io" target="_blank">Hugo</a>
 </footer><script src="/js/dark-mode.js"></script>
 
 </body>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Ja on landscape</title>
-		<link>https://blog.jlandowner.dev/tags/ja/</link>
-		<description>Recent content in Ja on blog.jlandowner.dev</description>
+		<title>SSH on landscape</title>
+		<link>https://blog.jlandowner.dev/tags/ssh/</link>
+		<description>Recent content in SSH on blog.jlandowner.dev</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>© 2021 jlandowner | Vitae theme for Hugo</copyright>
 		<lastBuildDate>Tue, 29 Mar 2022 01:00:00 +0900</lastBuildDate>
-		<atom:link href="https://blog.jlandowner.dev/tags/ja/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="https://blog.jlandowner.dev/tags/ssh/index.xml" rel="self" type="application/rss+xml" />
 		<item>
 			<title>Ubuntu 20.04 SSHで公開鍵認証＋Google Authenticator</title>
 			<link>https://blog.jlandowner.dev/posts/ssh-google-authenticator/</link>
@@ -17,18 +17,6 @@
 			<description>
 			SSHに公開鍵認証をつけているが、二要素認証としてgoogle-authenticator-libpamを設定してみる。
 環境 $ uname -a Linux ursula-T3600 5.13.0-30-generic #33~20.04.1-Ubuntu SMP Mon …
-			</description>
-		</item>
-		<item>
-			<title>GPGキー関連のコマンド</title>
-			<link>https://blog.jlandowner.dev/posts/gpg/</link>
-			<pubDate>Fri, 11 Feb 2022 14:00:00 +0900</pubDate>
-			<guid>https://blog.jlandowner.dev/posts/gpg/</guid>
-			<description>
-			いつもコマンドを忘れるのでまとめる。
-プライマリキー生成 ed25519でキーを生成には--expertオプションが必要。
-プライマリキーは無期限にし、オフラインで管理する。
-$ gpg --expert --full-gen-key  gpg (GnuPG) 2.2.20; …
 			</description>
 		</item>
 	</channel>

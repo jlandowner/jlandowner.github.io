@@ -18,7 +18,7 @@
 			いつもコマンドを忘れるのでまとめる。
 プライマリキー生成 ed25519でキーを生成には--expertオプションが必要。
 プライマリキーは無期限にし、オフラインで管理する。
-$ gpg --expert --full-gen-key gpg (GnuPG) 2.2.20; …
+$ gpg --expert --full-gen-key  gpg (GnuPG) 2.2.20; …
 			</description>
 		</item>
 	</channel>
