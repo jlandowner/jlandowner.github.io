@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>tailscale on landscape</title>
+		<link>https://blog.jlandowner.dev/tags/tailscale/</link>
+		<description>Recent content in tailscale on blog.jlandowner.dev</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<copyright>© 2023 jlandowner | Vitae theme for Hugo</copyright>
+		<lastBuildDate>Sun, 27 Aug 2023 12:00:00 +0900</lastBuildDate>
+		<atom:link href="https://blog.jlandowner.dev/tags/tailscale/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>自宅k8sクラスター内で稼働するcode-serverにtailscaleで外から繋ぐ</title>
+			<link>https://blog.jlandowner.dev/posts/tailscale/</link>
+			<pubDate>Sun, 27 Aug 2023 12:00:00 +0900</pubDate>
+			<guid>https://blog.jlandowner.dev/posts/tailscale/</guid>
+			<description>
+			自宅k8sクラスターでcode-serverを起動しており、もっぱら現在のメイン開発環境となっている。
+このcode-serverを外出先から接続するために、tailscaleをクラスターに導入した。
+構成 code-serverにはcert-managerで払い出した所有するパ …
+			</description>
+		</item>
+	</channel>
+</rss>

@@ -6,9 +6,30 @@
 		<description>Recent content on blog.jlandowner.dev</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
-		<copyright>© 2021 jlandowner | Vitae theme for Hugo</copyright>
-		<lastBuildDate>Tue, 29 Mar 2022 01:00:00 +0900</lastBuildDate>
+		<copyright>© 2023 jlandowner | Vitae theme for Hugo</copyright>
+		<lastBuildDate>Sat, 02 Sep 2023 12:00:00 +0900</lastBuildDate>
 		<atom:link href="https://blog.jlandowner.dev/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>Raspberry Pi 4BとPoE&#43; HATを買ったが、PoE&#43; HATがコイル鳴く</title>
+			<link>https://blog.jlandowner.dev/posts/raspberrypi-poe&#43;hat/</link>
+			<pubDate>Sat, 02 Sep 2023 12:00:00 +0900</pubDate>
+			<guid>https://blog.jlandowner.dev/posts/raspberrypi-poe&#43;hat/</guid>
+			<description>
+			9月になってやっとラズパイ4が買えるようになってきたので、やっと購入した。今回は8GBモデル。 自宅k8sクラスターはProxmoxクラスター上のVMで構成されているが、いくつかのユースケースでベアメタルのノードが欲しくなったためだ。
+そのうちの理由のうちのひとつに全物理マシンが …
+			</description>
+		</item>
+		<item>
+			<title>自宅k8sクラスター内で稼働するcode-serverにtailscaleで外から繋ぐ</title>
+			<link>https://blog.jlandowner.dev/posts/tailscale/</link>
+			<pubDate>Sun, 27 Aug 2023 12:00:00 +0900</pubDate>
+			<guid>https://blog.jlandowner.dev/posts/tailscale/</guid>
+			<description>
+			自宅k8sクラスターでcode-serverを起動しており、もっぱら現在のメイン開発環境となっている。
+このcode-serverを外出先から接続するために、tailscaleをクラスターに導入した。
+構成 code-serverにはcert-managerで払い出した所有するパ …
+			</description>
+		</item>
 		<item>
 			<title>Ubuntu 20.04 SSHで公開鍵認証＋Google Authenticator</title>
 			<link>https://blog.jlandowner.dev/posts/ssh-google-authenticator/</link>
@@ -28,7 +49,7 @@
 			いつもコマンドを忘れるのでまとめる。
 プライマリキー生成 ed25519でキーを生成には--expertオプションが必要。
 プライマリキーは無期限にし、オフラインで管理する。
-$ gpg --expert --full-gen-key  gpg (GnuPG) 2.2.20; …
+$ gpg --expert --full-gen-key gpg (GnuPG) 2.2.20; …
 			</description>
 		</item>
 		<item>

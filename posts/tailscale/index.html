@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="apple-touch-icon" sizes="57x57" href="https://blog.jlandowner.dev/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="https://blog.jlandowner.dev/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="https://blog.jlandowner.dev/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://blog.jlandowner.dev/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="https://blog.jlandowner.dev/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="https://blog.jlandowner.dev/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="https://blog.jlandowner.dev/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://blog.jlandowner.dev/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://blog.jlandowner.dev/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="https://blog.jlandowner.dev/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://blog.jlandowner.dev/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="https://blog.jlandowner.dev/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://blog.jlandowner.dev/favicon/favicon-16x16.png">
+  <link rel="manifest" href="https://blog.jlandowner.dev/favicon/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="https://blog.jlandowner.dev/favicon/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170607476-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-170607476-1');
+  </script>
+
+
+  <meta name="generator" content="Hugo 0.111.3">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="keywords" content="Kubernetes,tailscale,Dialy,Ja"><meta property="og:title" content="自宅k8sクラスター内で稼働するcode-serverにtailscaleで外から繋ぐ" />
+<meta property="og:description" content="自宅k8sクラスターでcode-serverを起動しており、もっぱら現在のメイン開発環境となっている。
+このcode-serverを外出先から接続するために、tailscaleをクラスターに導入した。
+構成 code-serverにはcert-managerで払い出した所有するパブリックドメインの証明書でhttpsで接続している。 TLS終端は[ingress-nginx]で、DNSはパブリックドメインのDNSサーバにプライベートIPを登録して自宅LAN内で利用していた。
+tailscaleで接続するには以下の2つのエンドポイントが必要となる。
+Proxyサーバ: ingress-nginxへHTTPS通信をプロキシするProxyサーバ DNSサーバ: tailscaleネットワーク内でのみ所有するパブリックドメインに対する名前解決で上記のProxyサーバのtailscale IPを解決する必要がある。 tailscaleの公式でKubernetesへのデプロイ方法が公開されている。 https://tailscale.com/kb/1185/kubernetes/
+ドキュメントによると以下のような方式が選択可能とのこと
+方式 説明 Sidecar 公開するPodのサイドカーとして起動することで、Podをtailscaleネットワークに参加させる方法 Service Proxy ServiceのClusterIPへプロキシする単独で稼働するtailscale Podを、tailscaleネットワークに参加させる方法 Subnet Router PodやServiceのCIDRをtailscaleネットワークから直接接続可能にする方法 今回は以下の方式とした
+Proxyサーバ: Service Proxy方式で、ingress-nginxのServiceのClusterIPへプロキシさせる DNSサーバ: 所有するドメインに対する名前解決でProxyサーバのtailscale IPを返すDNSサーバPodを起動する。またService Proxy方式で、そのDNS ServiceのClusterIPへプロキシさせる YAML構成 ドキュメントでは単一Podで起動する手順となっているが、tailscale上のノードはホスト名が利用される仕様からStatefulSetで起動するように修正した。
+最終的なYAMLは次のようにした。
+Auth Key tailscaleネットワークに参加するためにAuth Keyを発行し、Tailscale Podに読み込ませる必要がある。 ドキュメントには以下の設定が推奨されていたが、StatefulSetで通常のサーバと同じように扱えることから、推奨設定は行わないことにした。
+Reusable: 同じAuth Keyを複数サーバで利用できる（Pod名が異なる場合に有効だが、StatefulSetで固定化したので不要と判断した） Ephemeral: サーバの接続がしばらく切れたらTailscaleから削除する設定（Podが一時的なものであれば有効だが、StatefulSetで…） tailscale-proxy apiVersion: rbac.authorization.k8s.io/v1 kind: Role metadata: name: tailscale namespace: tailscale-proxy rules: - apiGroups: [&#34;&#34;] resources: [&#34;secrets&#34;] # Create can not be restricted to a resource name." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jlandowner.dev/posts/tailscale/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-08-27T12:00:00+09:00" />
+<meta property="article:modified_time" content="2023-08-27T12:00:00+09:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="自宅k8sクラスター内で稼働するcode-serverにtailscaleで外から繋ぐ"/>
+<meta name="twitter:description" content="自宅k8sクラスターでcode-serverを起動しており、もっぱら現在のメイン開発環境となっている。
+このcode-serverを外出先から接続するために、tailscaleをクラスターに導入した。
+構成 code-serverにはcert-managerで払い出した所有するパブリックドメインの証明書でhttpsで接続している。 TLS終端は[ingress-nginx]で、DNSはパブリックドメインのDNSサーバにプライベートIPを登録して自宅LAN内で利用していた。
+tailscaleで接続するには以下の2つのエンドポイントが必要となる。
+Proxyサーバ: ingress-nginxへHTTPS通信をプロキシするProxyサーバ DNSサーバ: tailscaleネットワーク内でのみ所有するパブリックドメインに対する名前解決で上記のProxyサーバのtailscale IPを解決する必要がある。 tailscaleの公式でKubernetesへのデプロイ方法が公開されている。 https://tailscale.com/kb/1185/kubernetes/
+ドキュメントによると以下のような方式が選択可能とのこと
+方式 説明 Sidecar 公開するPodのサイドカーとして起動することで、Podをtailscaleネットワークに参加させる方法 Service Proxy ServiceのClusterIPへプロキシする単独で稼働するtailscale Podを、tailscaleネットワークに参加させる方法 Subnet Router PodやServiceのCIDRをtailscaleネットワークから直接接続可能にする方法 今回は以下の方式とした
+Proxyサーバ: Service Proxy方式で、ingress-nginxのServiceのClusterIPへプロキシさせる DNSサーバ: 所有するドメインに対する名前解決でProxyサーバのtailscale IPを返すDNSサーバPodを起動する。またService Proxy方式で、そのDNS ServiceのClusterIPへプロキシさせる YAML構成 ドキュメントでは単一Podで起動する手順となっているが、tailscale上のノードはホスト名が利用される仕様からStatefulSetで起動するように修正した。
+最終的なYAMLは次のようにした。
+Auth Key tailscaleネットワークに参加するためにAuth Keyを発行し、Tailscale Podに読み込ませる必要がある。 ドキュメントには以下の設定が推奨されていたが、StatefulSetで通常のサーバと同じように扱えることから、推奨設定は行わないことにした。
+Reusable: 同じAuth Keyを複数サーバで利用できる（Pod名が異なる場合に有効だが、StatefulSetで固定化したので不要と判断した） Ephemeral: サーバの接続がしばらく切れたらTailscaleから削除する設定（Podが一時的なものであれば有効だが、StatefulSetで…） tailscale-proxy apiVersion: rbac.authorization.k8s.io/v1 kind: Role metadata: name: tailscale namespace: tailscale-proxy rules: - apiGroups: [&#34;&#34;] resources: [&#34;secrets&#34;] # Create can not be restricted to a resource name."/>
+
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/main.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/all.css" />
+<title>自宅k8sクラスター内で稼働するcode-serverにtailscaleで外から繋ぐ | landscape</title></head>
+<body>
+<header>
+<div id="avatar">
+<a href="https://blog.jlandowner.dev/"><img src="/img/avator.png" alt="landscape"></a>
+</div>
+<div id="titletext">
+<h2 id="title"><a href="https://blog.jlandowner.dev/">landscape</a></h2>
+</div>
+<div id="title-description">
+<p id="subtitle">Deep think, Easy go.</p>
+<div id="social">
+<nav><ul>
+<li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li>
+<li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li>
+<li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li>
+<li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li>
+<li><a><i title="Switch Dark Mode" class="dark-mode icons fas fa-moon"></i></a></li>
+</ul></nav>
+</div>
+</div>
+<div id="mainmenu">
+<nav>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/posts">All Posts</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="/tags">Tags</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<main>
+<div class="post">
+<article>
+<div class="post-header">
+<div class="meta">
+<div class="date">
+<span class="day">27</span>
+<span class="rest">Aug 2023</span>
+</div>
+</div>
+<div class="matter">
+<h1 class="title">自宅k8sクラスター内で稼働するcode-serverにtailscaleで外から繋ぐ</h1>
+<p class="post-meta">
+<span class="post-meta">
+
+
+
+
+
+</span>
+
+</p>
+</div>
+</div>
+<div class="markdown">
+<p>自宅k8sクラスターで<a href="https://github.com/cosmo-workspace/cosmo-dev" target="_blank">code-server</a>を起動しており、もっぱら現在のメイン開発環境となっている。</p>
+<p>このcode-serverを外出先から接続するために、tailscaleをクラスターに導入した。</p>
+<h1 id="構成">構成</h1>
+<!-- raw HTML omitted -->
+<p>code-serverにはcert-managerで払い出した所有するパブリックドメインの証明書でhttpsで接続している。
+TLS終端は[ingress-nginx]で、DNSはパブリックドメインのDNSサーバにプライベートIPを登録して自宅LAN内で利用していた。</p>
+<p>tailscaleで接続するには以下の2つのエンドポイントが必要となる。</p>
+<ol>
+<li>Proxyサーバ: ingress-nginxへHTTPS通信をプロキシするProxyサーバ</li>
+<li>DNSサーバ: tailscaleネットワーク内でのみ所有するパブリックドメインに対する名前解決で上記のProxyサーバのtailscale IPを解決する必要がある。</li>
+</ol>
+<p>tailscaleの公式でKubernetesへのデプロイ方法が公開されている。
+<a href="https://tailscale.com/kb/1185/kubernetes/" target="_blank">https://tailscale.com/kb/1185/kubernetes/</a></p>
+<p>ドキュメントによると以下のような方式が選択可能とのこと</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">方式</th>
+<th style="text-align:left">説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Sidecar</td>
+<td style="text-align:left">公開するPodのサイドカーとして起動することで、Podをtailscaleネットワークに参加させる方法</td>
+</tr>
+<tr>
+<td style="text-align:left">Service Proxy</td>
+<td style="text-align:left">ServiceのClusterIPへプロキシする単独で稼働するtailscale Podを、tailscaleネットワークに参加させる方法</td>
+</tr>
+<tr>
+<td style="text-align:left">Subnet Router</td>
+<td style="text-align:left">PodやServiceのCIDRをtailscaleネットワークから直接接続可能にする方法</td>
+</tr>
+</tbody>
+</table>
+<p>今回は以下の方式とした</p>
+<ol>
+<li>Proxyサーバ: Service Proxy方式で、ingress-nginxのServiceのClusterIPへプロキシさせる</li>
+<li>DNSサーバ: 所有するドメインに対する名前解決でProxyサーバのtailscale IPを返すDNSサーバPodを起動する。またService Proxy方式で、そのDNS ServiceのClusterIPへプロキシさせる</li>
+</ol>
+<h1 id="yaml構成">YAML構成</h1>
+<p>ドキュメントでは単一Podで起動する手順となっているが、tailscale上のノードはホスト名が利用される仕様からStatefulSetで起動するように修正した。</p>
+<p>最終的なYAMLは次のようにした。</p>
+<h2 id="auth-key">Auth Key</h2>
+<p>tailscaleネットワークに参加するためにAuth Keyを発行し、Tailscale Podに読み込ませる必要がある。
+ドキュメントには以下の設定が推奨されていたが、StatefulSetで通常のサーバと同じように扱えることから、推奨設定は行わないことにした。</p>
+<ul>
+<li>Reusable: 同じAuth Keyを複数サーバで利用できる（Pod名が異なる場合に有効だが、StatefulSetで固定化したので不要と判断した）</li>
+<li>Ephemeral: サーバの接続がしばらく切れたらTailscaleから削除する設定（Podが一時的なものであれば有効だが、StatefulSetで…）</li>
+</ul>
+<h2 id="tailscale-proxy">tailscale-proxy</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tailscale</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">tailscale-proxy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">rules</span>:
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;secrets&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Create can not be restricted to a resource name.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;create&#34;</span>]
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resourceNames</span>: [<span style="color:#e6db74">&#34;tailscale-auth&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>: [<span style="color:#e6db74">&#34;secrets&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;update&#34;</span>, <span style="color:#e6db74">&#34;patch&#34;</span>]
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">RoleBinding</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tailscale</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">tailscale-proxy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">subjects</span>:
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ServiceAccount</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;tailscale&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">roleRef</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Role</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tailscale</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">apiGroup</span>: <span style="color:#ae81ff">rbac.authorization.k8s.io</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ServiceAccount</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tailscale</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">tailscale-proxy</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">StatefulSet</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tailscale-proxy</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">tailscale-proxy</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">serviceName</span>: <span style="color:#ae81ff">tailscale-proxy</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-proxy</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">template</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-proxy</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">serviceAccountName</span>: <span style="color:#ae81ff">tailscale</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">initContainers</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># In order to run as a proxy we need to enable IP Forwarding inside</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># the container. The `net.ipv4.ip_forward` sysctl is not allowlisted</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># in Kubelet by default.</span>
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sysctler</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">image</span>: <span style="color:#ae81ff">busybox</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">securityContext</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">privileged</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">command</span>: [<span style="color:#e6db74">&#34;/bin/sh&#34;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">args</span>:
+</span></span><span style="display:flex;"><span>          - -<span style="color:#ae81ff">c</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#ae81ff">sysctl -w net.ipv4.ip_forward=1 net.ipv6.conf.all.forwarding=1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">resources</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">requests</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">1m</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">1Mi</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">containers</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tailscale</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">image</span>: <span style="color:#e6db74">&#34;ghcr.io/tailscale/tailscale:latest&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">env</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#75715e"># Store the state in a k8s secret</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">TS_KUBE_SECRET</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">value</span>: <span style="color:#e6db74">&#34;tailscale-auth&#34;</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">TS_USERSPACE</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">value</span>: <span style="color:#e6db74">&#34;false&#34;</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">TS_AUTHKEY</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">valueFrom</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">secretKeyRef</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">name</span>: <span style="color:#ae81ff">tailscale-auth</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">key</span>: <span style="color:#ae81ff">TS_AUTHKEY</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">optional</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">TS_DEST_IP</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">value</span>: <span style="color:#e6db74">&#34;10.96.91.132&#34;</span> <span style="color:#75715e"># ingress-nginxのServiceのClusterIPを設定</span>
+</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">TS_AUTH_ONCE</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">value</span>: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">securityContext</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">capabilities</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">add</span>:
+</span></span><span style="display:flex;"><span>              - <span style="color:#ae81ff">NET_ADMIN</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">resources</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">limits</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">300m</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">512Mi</span>
+</span></span></code></pre></div><h2 id="tailscale-dns">tailscale-dns</h2>
+<h3 id="dnsサーバcoredns">DNSサーバ(CoreDNS)</h3>
+<p>大体はkube-dnsのCoreDNSから流用したもの。</p>
+<p>CoreDNSの設定はドキュメントを見た。
+プラグイン中心のドキュメントとなっており、単独のDNSサーバとして動かす設定までたどり着くのに時間がかかった。</p>
+<p><a href="https://coredns.io/plugins/file/" target="_blank">file</a>プラグインで特定のドメインに対するDNSサーバを設定するのが正解のようだが、</p>
+<p>とりあえずサクッと動かしてみたく、今はcode-serverやArog CD Dashboardなどを<a href="https://coredns.io/plugins/hosts/" target="_blank">hosts</a>プラグインで設定した。</p>
+<p>対象がない場合は、kube-dnsへフォワードするようにした。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ConfigMap</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">coredns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">data</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">Corefile</span>: |<span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    .:53 {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        errors
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        health {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            lameduck 5s
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        ready
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        hosts &#34;ドメイン&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;tailscale-proxyのTailscale IPアドレス&#34; code-server.&#34;ドメイン&#34; nas.&#34;ドメイン&#34; proxmox.&#34;ドメイン&#34; gitbucket.&#34;ドメイン&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            fallthrough
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        forward . 10.96.0.10 &lt;=== 対象がなければkube-dnsへフォワード
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        reload
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        log
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    }</span>    
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Service</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">coredns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">clusterIP</span>: <span style="color:#ae81ff">10.96.0.11</span> <span style="color:#75715e"># kube-dnsと被らないようにした</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">clusterIPs</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">10.96.0.11</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">dns</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">port</span>: <span style="color:#ae81ff">53</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">UDP</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">53</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">dns-tcp</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">port</span>: <span style="color:#ae81ff">53</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">53</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">metrics</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">port</span>: <span style="color:#ae81ff">9153</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">targetPort</span>: <span style="color:#ae81ff">9153</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">type</span>: <span style="color:#ae81ff">ClusterIP</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ServiceAccount</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">coredns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Deployment</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">coredns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">template</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">labels</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">app</span>: <span style="color:#ae81ff">tailscale-dns</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">containers</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">args</span>:
+</span></span><span style="display:flex;"><span>        - -<span style="color:#ae81ff">conf</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#ae81ff">/etc/coredns/Corefile</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">image</span>: <span style="color:#ae81ff">registry.k8s.io/coredns/coredns:v1.9.3</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">livenessProbe</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">failureThreshold</span>: <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">httpGet</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/health</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">port</span>: <span style="color:#ae81ff">8080</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">scheme</span>: <span style="color:#ae81ff">HTTP</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">initialDelaySeconds</span>: <span style="color:#ae81ff">60</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">successThreshold</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">timeoutSeconds</span>: <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">coredns</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">ports</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">53</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">dns</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">UDP</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">53</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">dns-tcp</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">containerPort</span>: <span style="color:#ae81ff">9153</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">metrics</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">readinessProbe</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">failureThreshold</span>: <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">httpGet</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/ready</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">port</span>: <span style="color:#ae81ff">8181</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">scheme</span>: <span style="color:#ae81ff">HTTP</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">periodSeconds</span>: <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">successThreshold</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">timeoutSeconds</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">resources</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">limits</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">170Mi</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">requests</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">100m</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">70Mi</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">securityContext</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">allowPrivilegeEscalation</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">capabilities</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">add</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#ae81ff">NET_BIND_SERVICE</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">drop</span>:
+</span></span><span style="display:flex;"><span>            - <span style="color:#ae81ff">all</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">readOnlyRootFilesystem</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/etc/coredns</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">config-volume</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">readOnly</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">serviceAccountName</span>: <span style="color:#ae81ff">coredns</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumes</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">configMap</span>:
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">defaultMode</span>: <span style="color:#ae81ff">420</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">coredns</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">config-volume</span>
+</span></span></code></pre></div><h3 id="tailscale">tailscale</h3>
+<p>こちらはtailscale-proxyと同様（IPをDNSサーバのServiceのClusterIPに設定）
+ホスト名（StatefulSet名）が被らないようにした。</p>
+<h1 id="tailscaleの設定">Tailscaleの設定</h1>
+<h2 id="machines">Machines</h2>
+<p>このようになった。
+<!-- raw HTML omitted --></p>
+<h2 id="dns設定">DNS設定</h2>
+<p>tailscaleではTailscaleネットワーク上でDNSサーバの設定ができる</p>
+<!-- raw HTML omitted -->
+<p>Add Nameservers =&gt; Custom&hellip; =&gt; &ldquo;tailscale-dns-0のIP&quot;の設定と&quot;Split DNS&quot;に✅</p>
+<h1 id="最後に">最後に</h1>
+<p>これで外出先でTailscaleに参加したPCでcode-serverのURLに接続すると</p>
+<ol>
+<li>code-serverのドメインの名前解決としてtailscale-dnsとして自宅k8sクラスター内のCoreDNSがtailscale-proxyのIPを返す。</li>
+<li>tailscale-proxyのIPに対してHTTPS接続することでingress-nginxへプロキシされ、目的のcode-server Podに到達する。</li>
+<li>ドメインは同一であるため、証明書のドメイン検証が問題なくクリアする！</li>
+</ol>
+
+</div>
+<div class="tags">
+<div class="taxosfloating_left">
+<p>Tags</p>
+</div>
+<div class="termsfloating_right">
+<p>
+<a href="/tags/dialy/">dialy</a>
+<a href="/tags/ja/">ja</a>
+<a href="/tags/kubernetes/">kubernetes</a>
+<a href="/tags/tailscale/">tailscale</a>
+</p>
+</div>
+<div class="clearit"></div>
+</div>
+</article>
+</div>
+</main>
+<footer>
+© 2023 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae" target="_blank">Vitae</a> theme for <a href="https://gohugo.io" target="_blank">Hugo</a>
+</footer><script src="/js/dark-mode.js"></script>
+
+</body>
+</html>

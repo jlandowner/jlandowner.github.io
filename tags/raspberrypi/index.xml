@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>RaspberryPi on landscape</title>
+		<link>https://blog.jlandowner.dev/tags/raspberrypi/</link>
+		<description>Recent content in RaspberryPi on blog.jlandowner.dev</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<copyright>© 2023 jlandowner | Vitae theme for Hugo</copyright>
+		<lastBuildDate>Sat, 02 Sep 2023 12:00:00 +0900</lastBuildDate>
+		<atom:link href="https://blog.jlandowner.dev/tags/raspberrypi/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>Raspberry Pi 4BとPoE&#43; HATを買ったが、PoE&#43; HATがコイル鳴く</title>
+			<link>https://blog.jlandowner.dev/posts/raspberrypi-poe&#43;hat/</link>
+			<pubDate>Sat, 02 Sep 2023 12:00:00 +0900</pubDate>
+			<guid>https://blog.jlandowner.dev/posts/raspberrypi-poe&#43;hat/</guid>
+			<description>
+			9月になってやっとラズパイ4が買えるようになってきたので、やっと購入した。今回は8GBモデル。 自宅k8sクラスターはProxmoxクラスター上のVMで構成されているが、いくつかのユースケースでベアメタルのノードが欲しくなったためだ。
+そのうちの理由のうちのひとつに全物理マシンが …
+			</description>
+		</item>
+	</channel>
+</rss>

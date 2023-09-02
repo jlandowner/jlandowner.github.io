@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="apple-touch-icon" sizes="57x57" href="https://blog.jlandowner.dev/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="https://blog.jlandowner.dev/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="https://blog.jlandowner.dev/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://blog.jlandowner.dev/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="https://blog.jlandowner.dev/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="https://blog.jlandowner.dev/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="https://blog.jlandowner.dev/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://blog.jlandowner.dev/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://blog.jlandowner.dev/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="https://blog.jlandowner.dev/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://blog.jlandowner.dev/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="https://blog.jlandowner.dev/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://blog.jlandowner.dev/favicon/favicon-16x16.png">
+  <link rel="manifest" href="https://blog.jlandowner.dev/favicon/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="https://blog.jlandowner.dev/favicon/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170607476-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-170607476-1');
+  </script>
+
+
+  <meta name="generator" content="Hugo 0.111.3">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="keywords" content="RaspberryPi,Dialy,Ja"><meta property="og:title" content="Raspberry Pi 4BとPoE&#43; HATを買ったが、PoE&#43; HATがコイル鳴く" />
+<meta property="og:description" content="9月になってやっとラズパイ4が買えるようになってきたので、やっと購入した。今回は8GBモデル。 自宅k8sクラスターはProxmoxクラスター上のVMで構成されているが、いくつかのユースケースでベアメタルのノードが欲しくなったためだ。
+そのうちの理由のうちのひとつに全物理マシンが同じ1階の仕事部屋にあるので、別の部屋に欲しかったというのがある。
+現状2階のリビングにはルーターと防犯カメラ用のPoEスイッチングハブがあり、PoEハブのポートに空きがあるので、ここにPoEで動くラズパイをつけようという算段だった。
+OS(Raspberrypi OS Lite 64bit)を焼いて、いざPoEで起動すると……コイル鳴きが酷い。
+とてもじゃないが、リビングで動かせるレベルではなかった。
+まさにこの動画のような感じ https://www.youtube.com/watch?v=3fuJAuCCmAA
+調べるといくつかヒットする。Hatをつけた状態でUSB-Cで給電するとコイル鳴くのは既知の事象らしい。 だが、今回のケースはそうではないのだが、同じようなケースも結構ヒットする。
+https://www.reddit.com/r/raspberry_pi/comments/pw4qg8/poe_hat_on_pi_4_coil_whine/?rdt=48303
+https://forums.raspberrypi.com/viewtopic.php?t=340016
+https://forum.core-electronics.com.au/t/high-pitch-sound-from-pi-4b-using-official-poe-hat/12933
+事象としては同じで低電力の方がコイル鳴きが酷くなる模様。
+私の環境でも、SSHして何もしないとコイル鳴き、apt updateとかをしているとコイル鳴きは止まる。 またpoweroffするとまた違ったもっと酷いコイル鳴きになった。
+結局どうも個体差のようで交換したら出なくなったというのが唯一の解決した内容だった… （ラズパイでクラスターを組むために4つ購入したら3つダメだったという人もいたが）
+残念ながら返品するかと思いつつ、その前にと試しに元々持っていた3B&#43;を繋いだところ……なんとコイル鳴きしなかった。
+よくわからないが返品するか余計に悩んでしまった。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jlandowner.dev/posts/raspberrypi-poe&#43;hat/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-09-02T12:00:00+09:00" />
+<meta property="article:modified_time" content="2023-09-02T12:00:00+09:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Raspberry Pi 4BとPoE&#43; HATを買ったが、PoE&#43; HATがコイル鳴く"/>
+<meta name="twitter:description" content="9月になってやっとラズパイ4が買えるようになってきたので、やっと購入した。今回は8GBモデル。 自宅k8sクラスターはProxmoxクラスター上のVMで構成されているが、いくつかのユースケースでベアメタルのノードが欲しくなったためだ。
+そのうちの理由のうちのひとつに全物理マシンが同じ1階の仕事部屋にあるので、別の部屋に欲しかったというのがある。
+現状2階のリビングにはルーターと防犯カメラ用のPoEスイッチングハブがあり、PoEハブのポートに空きがあるので、ここにPoEで動くラズパイをつけようという算段だった。
+OS(Raspberrypi OS Lite 64bit)を焼いて、いざPoEで起動すると……コイル鳴きが酷い。
+とてもじゃないが、リビングで動かせるレベルではなかった。
+まさにこの動画のような感じ https://www.youtube.com/watch?v=3fuJAuCCmAA
+調べるといくつかヒットする。Hatをつけた状態でUSB-Cで給電するとコイル鳴くのは既知の事象らしい。 だが、今回のケースはそうではないのだが、同じようなケースも結構ヒットする。
+https://www.reddit.com/r/raspberry_pi/comments/pw4qg8/poe_hat_on_pi_4_coil_whine/?rdt=48303
+https://forums.raspberrypi.com/viewtopic.php?t=340016
+https://forum.core-electronics.com.au/t/high-pitch-sound-from-pi-4b-using-official-poe-hat/12933
+事象としては同じで低電力の方がコイル鳴きが酷くなる模様。
+私の環境でも、SSHして何もしないとコイル鳴き、apt updateとかをしているとコイル鳴きは止まる。 またpoweroffするとまた違ったもっと酷いコイル鳴きになった。
+結局どうも個体差のようで交換したら出なくなったというのが唯一の解決した内容だった… （ラズパイでクラスターを組むために4つ購入したら3つダメだったという人もいたが）
+残念ながら返品するかと思いつつ、その前にと試しに元々持っていた3B&#43;を繋いだところ……なんとコイル鳴きしなかった。
+よくわからないが返品するか余計に悩んでしまった。"/>
+
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/normalize.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/main.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://blog.jlandowner.dev/css/all.css" />
+<title>Raspberry Pi 4BとPoE&#43; HATを買ったが、PoE&#43; HATがコイル鳴く | landscape</title></head>
+<body>
+<header>
+<div id="avatar">
+<a href="https://blog.jlandowner.dev/"><img src="/img/avator.png" alt="landscape"></a>
+</div>
+<div id="titletext">
+<h2 id="title"><a href="https://blog.jlandowner.dev/">landscape</a></h2>
+</div>
+<div id="title-description">
+<p id="subtitle">Deep think, Easy go.</p>
+<div id="social">
+<nav><ul>
+<li><a href="https://qiita.com/jlandowner"><i title="Qiita" class="icons fas fa-ghost"></i></a></li>
+<li><a href="https://twitter.com/jlandowner_dev"><i title="Twitter" class="icons fab fa-twitter"></i></a></li>
+<li><a href="https://github.com/jlandowner"><i title="Github" class="icons fab fa-github"></i></a></li>
+<li><a href="/index.xml"><i title="RSS" class="icons fas fa-rss"></i></a></li>
+<li><a><i title="Switch Dark Mode" class="dark-mode icons fas fa-moon"></i></a></li>
+</ul></nav>
+</div>
+</div>
+<div id="mainmenu">
+<nav>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/posts">All Posts</a></li>
+<li><a href="/about">About</a></li>
+<li><a href="/tags">Tags</a></li>
+</ul>
+</nav>
+</div>
+</header>
+<main>
+<div class="post">
+<article>
+<div class="post-header">
+<div class="meta">
+<div class="date">
+<span class="day">02</span>
+<span class="rest">Sep 2023</span>
+</div>
+</div>
+<div class="matter">
+<h1 class="title">Raspberry Pi 4BとPoE&#43; HATを買ったが、PoE&#43; HATがコイル鳴く</h1>
+<p class="post-meta">
+<span class="post-meta">
+
+
+
+
+
+</span>
+
+</p>
+</div>
+</div>
+<div class="markdown">
+<p>9月になってやっとラズパイ4が買えるようになってきたので、やっと購入した。今回は8GBモデル。
+自宅k8sクラスターはProxmoxクラスター上のVMで構成されているが、いくつかのユースケースでベアメタルのノードが欲しくなったためだ。</p>
+<p>そのうちの理由のうちのひとつに全物理マシンが同じ1階の仕事部屋にあるので、別の部屋に欲しかったというのがある。</p>
+<p>現状2階のリビングにはルーターと防犯カメラ用のPoEスイッチングハブがあり、PoEハブのポートに空きがあるので、ここにPoEで動くラズパイをつけようという算段だった。</p>
+<p>OS(Raspberrypi OS Lite 64bit)を焼いて、いざPoEで起動すると……コイル鳴きが酷い。</p>
+<p>とてもじゃないが、リビングで動かせるレベルではなかった。</p>
+<p>まさにこの動画のような感じ
+<a href="https://www.youtube.com/watch?v=3fuJAuCCmAA" target="_blank">https://www.youtube.com/watch?v=3fuJAuCCmAA</a></p>
+<p>調べるといくつかヒットする。Hatをつけた状態でUSB-Cで給電するとコイル鳴くのは既知の事象らしい。
+だが、今回のケースはそうではないのだが、同じようなケースも結構ヒットする。</p>
+<p><a href="https://www.reddit.com/r/raspberry_pi/comments/pw4qg8/poe_hat_on_pi_4_coil_whine/?rdt=48303" target="_blank">https://www.reddit.com/r/raspberry_pi/comments/pw4qg8/poe_hat_on_pi_4_coil_whine/?rdt=48303</a></p>
+<p><a href="https://forums.raspberrypi.com/viewtopic.php?t=340016" target="_blank">https://forums.raspberrypi.com/viewtopic.php?t=340016</a></p>
+<p><a href="https://forum.core-electronics.com.au/t/high-pitch-sound-from-pi-4b-using-official-poe-hat/12933" target="_blank">https://forum.core-electronics.com.au/t/high-pitch-sound-from-pi-4b-using-official-poe-hat/12933</a></p>
+<p>事象としては同じで低電力の方がコイル鳴きが酷くなる模様。</p>
+<p>私の環境でも、SSHして何もしないとコイル鳴き、<code>apt update</code>とかをしているとコイル鳴きは止まる。
+また<code>poweroff</code>するとまた違ったもっと酷いコイル鳴きになった。</p>
+<p>結局どうも個体差のようで交換したら出なくなったというのが唯一の解決した内容だった…
+（ラズパイでクラスターを組むために4つ購入したら3つダメだったという人もいたが）</p>
+<p>残念ながら返品するかと思いつつ、その前にと試しに元々持っていた3B+を繋いだところ……なんとコイル鳴きしなかった。</p>
+<p>よくわからないが返品するか余計に悩んでしまった。</p>
+
+</div>
+<div class="tags">
+<div class="taxosfloating_left">
+<p>Tags</p>
+</div>
+<div class="termsfloating_right">
+<p>
+<a href="/tags/dialy/">dialy</a>
+<a href="/tags/ja/">ja</a>
+<a href="/tags/raspberrypi/">raspberrypi</a>
+</p>
+</div>
+<div class="clearit"></div>
+</div>
+</article>
+</div>
+</main>
+<footer>
+© 2023 jlandowner | <a href="https://github.com/dataCobra/hugo-vitae" target="_blank">Vitae</a> theme for <a href="https://gohugo.io" target="_blank">Hugo</a>
+</footer><script src="/js/dark-mode.js"></script>
+
+</body>
+</html>
