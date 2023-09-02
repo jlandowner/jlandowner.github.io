@@ -126,7 +126,9 @@ Reusable: 同じAuth Keyを複数サーバで利用できる（Pod名が異な�
 <p>自宅k8sクラスターで<a href="https://github.com/cosmo-workspace/cosmo-dev" target="_blank">code-server</a>を起動しており、もっぱら現在のメイン開発環境となっている。</p>
 <p>このcode-serverを外出先から接続するために、tailscaleをクラスターに導入した。</p>
 <h1 id="構成">構成</h1>
-<!-- raw HTML omitted -->
+<p><figure>
+  <img src="/img/tailscale-arch.drawio.svg" alt="arch"  />
+</figure></p>
 <p>code-serverにはcert-managerで払い出した所有するパブリックドメインの証明書でhttpsで接続している。
 TLS終端は[ingress-nginx]で、DNSはパブリックドメインのDNSサーバにプライベートIPを登録して自宅LAN内で利用していた。</p>
 <p>tailscaleで接続するには以下の2つのエンドポイントが必要となる。</p>
@@ -418,10 +420,14 @@ TLS終端は[ingress-nginx]で、DNSはパブリックドメインのDNSサー�
 <h1 id="tailscaleの設定">Tailscaleの設定</h1>
 <h2 id="machines">Machines</h2>
 <p>このようになった。
-<!-- raw HTML omitted --></p>
+<figure>
+  <img src="/img/tailscale-1.png" alt="machines"  />
+</figure></p>
 <h2 id="dns設定">DNS設定</h2>
 <p>tailscaleではTailscaleネットワーク上でDNSサーバの設定ができる</p>
-<!-- raw HTML omitted -->
+<p><figure>
+  <img src="/img/tailscale-2.png" alt="nameservers"  />
+</figure></p>
 <p>Add Nameservers =&gt; Custom&hellip; =&gt; &ldquo;tailscale-dns-0のIP&quot;の設定と&quot;Split DNS&quot;に✅</p>
 <h1 id="最後に">最後に</h1>
 <p>これで外出先でTailscaleに参加したPCでcode-serverのURLに接続すると</p>
